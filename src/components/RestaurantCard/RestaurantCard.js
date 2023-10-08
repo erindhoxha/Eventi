@@ -8,7 +8,7 @@ const RestaurantCard = ({ item, width }) => {
         rounded="xl"
         h={150}
         bgImg={{
-          uri: item.image,
+          uri: item.image_url,
         }}
       >
         <Box
