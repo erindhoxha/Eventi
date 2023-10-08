@@ -6,6 +6,7 @@ import {
   Dimensions,
   NativeSyntheticEvent,
   TextInputChangeEventData,
+  ActivityIndicator,
 } from 'react-native';
 import {
   Text as MagnusText,
@@ -28,11 +29,13 @@ const SPACING = 24;
 const FoodScreen = () => {
   const [value, setValue] = useState('');
   const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const onChange = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
     setValue(e.nativeEvent.text);
   };
   const onSubmit = async (text: string) => {
+    setLoading(true);
     try {
       await yelp
         .get('/search', {
@@ -47,6 +50,8 @@ const FoodScreen = () => {
         });
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -66,6 +71,12 @@ const FoodScreen = () => {
                 </MagnusText>
               )}
             </Box>
+            {loading && (
+              <Box m="lg">
+                <ActivityIndicator />
+              </Box>
+            )}
+
             {results && results.length > 0 && (
               <>
                 <Box mx="lg">
@@ -97,7 +108,6 @@ const FoodScreen = () => {
                 </Box>
               </>
             )}
-
             <Box m="lg">
               {results && results.length ? (
                 <MagnusText fontWeight="normal" fontSize="md" mt="md">
