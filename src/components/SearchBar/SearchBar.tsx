@@ -1,9 +1,16 @@
 import React from 'react';
+import { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 import { Input, Icon } from 'react-native-magnus';
 
-const SearchBar = ({ onChange, onSubmit }) => {
-  const onSearchSubmit = (e) => {
-    console.log(process.env);
+type SearchBarProps = {
+  onChange: (e: NativeSyntheticEvent<TextInputChangeEventData>) => void;
+  onSubmit: (text: string) => void;
+};
+
+const SearchBar = ({ onChange, onSubmit }: SearchBarProps) => {
+  const onSearchSubmit = (
+    e: NativeSyntheticEvent<TextInputChangeEventData>
+  ) => {
     onSubmit(e.nativeEvent.text);
   };
   return (
@@ -19,7 +26,7 @@ const SearchBar = ({ onChange, onSubmit }) => {
       p="md"
       fontSize="lg"
       borderWidth={0}
-      placeholder="Search your doge homies"
+      placeholder="E.g. pizza, sushi"
       mt="lg"
       bg="gray100"
       onChange={(e) => onChange(e)}
