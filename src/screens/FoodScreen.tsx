@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
   StatusBar,
@@ -34,26 +34,39 @@ const FoodScreen = () => {
   const onChange = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
     setValue(e.nativeEvent.text);
   };
+
+  const searchApi = async (term: string) => {
+    await yelp
+      .get('/search', {
+        params: {
+          limit: 50,
+          term,
+          location: 'san jose',
+        },
+      })
+      .then((res) => {
+        setResults(res.data.businesses);
+      });
+  };
   const onSubmit = async (text: string) => {
     setLoading(true);
+    console.log('This is running!');
     try {
-      await yelp
-        .get('/search', {
-          params: {
-            limit: 50,
-            term: text,
-            location: 'san jose',
-          },
-        })
-        .then((res) => {
-          setResults(res.data.businesses);
-        });
+      await searchApi(text);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    setLoading(true);
+    searchApi('pizza').finally(() => {
+      setLoading(false);
+    });
+  }, []);
+
   return (
     <ThemeProvider>
       <StatusBar barStyle="dark-content" />
@@ -71,11 +84,11 @@ const FoodScreen = () => {
                 </MagnusText>
               )}
             </Box>
-            {loading && (
+            {loading ? (
               <Box m="lg">
                 <ActivityIndicator />
               </Box>
-            )}
+            ) : null}
 
             {results && results.length > 0 && (
               <>
