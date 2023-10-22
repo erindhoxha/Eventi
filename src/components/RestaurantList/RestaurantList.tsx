@@ -8,18 +8,12 @@ const { width } = Dimensions.get('window');
 const ITEM_SIZE = width * 0.82;
 const SPACING = 24;
 
-const RestaurantList = ({ results }) => {
+const RestaurantList = ({ results, title }) => {
   return (
     <>
       <Box mx="lg">
-        <MagnusText
-          color="dark"
-          fontWeight="bold"
-          fontSize="2xl"
-          mt="xl"
-          mb="md"
-        >
-          In your area
+        <MagnusText color="dark" fontWeight="bold" fontSize="xl" mb="md">
+          {title}
         </MagnusText>
       </Box>
       <Box>

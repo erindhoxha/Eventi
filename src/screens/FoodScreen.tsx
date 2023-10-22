@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
   StatusBar,
-  FlatList,
-  Dimensions,
   NativeSyntheticEvent,
   TextInputChangeEventData,
   ActivityIndicator,
+  View,
+  ScrollView,
 } from 'react-native';
 import {
   Text as MagnusText,
@@ -15,7 +15,6 @@ import {
   Box,
 } from 'react-native-magnus';
 import SearchBar from '../components/SearchBar/SearchBar';
-import RestaurantCard from '../components/RestaurantCard/RestaurantCard';
 import useResults from '../hooks/useResults';
 import OptionsPortal from '../components/OptionsPortal/OptionsPortal';
 import RestaurantList from '../components/RestaurantList/RestaurantList';
@@ -37,37 +36,88 @@ const FoodScreen = () => {
 
   return (
     <ThemeProvider>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="light-content" />
       <SafeAreaView style={{ flex: 1 }}>
         <Host>
-          <Box flex={1} pt="lg">
-            <Box mx="lg">
-              <MagnusText color="dark" fontWeight="bold" fontSize="4xl" mt="md">
-                Search for food
-              </MagnusText>
-              <SearchBar onChange={onChange} onSubmit={onSubmit} />
-              {error && (
-                <MagnusText color="red500" fontSize="md" mt="sm">
-                  Something went wrong on our end. Please try again.
-                </MagnusText>
-              )}
-            </Box>
-            {loading ? (
-              <Box m="lg">
-                <ActivityIndicator />
-              </Box>
-            ) : null}
-            {results && results.length > 0 && (
-              <RestaurantList results={results} />
-            )}
-            <Box m="lg">
-              {results && results.length ? (
-                <MagnusText fontWeight="normal" fontSize="md" mt="md">
-                  We have found {results.length} results
-                </MagnusText>
+          <ScrollView>
+            <Box flex={1} pt="lg">
+              {loading ? (
+                <Box m="lg">
+                  <ActivityIndicator />
+                </Box>
               ) : null}
+              <Box mx="lg">
+                <MagnusText
+                  color="dark"
+                  fontWeight="bold"
+                  fontSize="xl"
+                  mt="md"
+                  mb="md"
+                >
+                  Local goodies, all in one place
+                </MagnusText>
+                <View
+                  style={{
+                    borderBottomColor: 'black',
+                    borderBottomWidth: 1,
+                  }}
+                />
+              </Box>
+              <Box mx="lg" mb="lg">
+                <MagnusText
+                  color="gray800"
+                  fontWeight="500"
+                  fontSize="sm"
+                  mt="md"
+                >
+                  Search for food or restaurant name
+                </MagnusText>
+                <SearchBar onChange={onChange} onSubmit={onSubmit} />
+                {error && (
+                  <MagnusText color="red500" fontSize="md" mt="sm">
+                    Something went wrong on our end. Please try again.
+                  </MagnusText>
+                )}
+              </Box>
+
+              {results && results.length > 0 && (
+                <RestaurantList title="In your area" results={results} />
+              )}
+
+              <Box mx="lg" mb="lg" mt="lg">
+                <View
+                  style={{
+                    borderBottomColor: 'rgba(0,0,0,0.1)',
+                    borderBottomWidth: 1,
+                  }}
+                />
+              </Box>
+
+              {results && results.length > 0 && (
+                <RestaurantList title="Budget friendly" results={results} />
+              )}
+
+              <Box mx="lg" mb="lg" mt="lg">
+                <View
+                  style={{
+                    borderBottomColor: 'rgba(0,0,0,0.1)',
+                    borderBottomWidth: 1,
+                  }}
+                />
+              </Box>
+
+              {results && results.length > 0 && (
+                <RestaurantList title="Classy Sundays" results={results} />
+              )}
+              <Box m="lg">
+                {results && results.length ? (
+                  <MagnusText fontWeight="normal" fontSize="md" mt="md">
+                    We have found {results.length} results
+                  </MagnusText>
+                ) : null}
+              </Box>
             </Box>
-          </Box>
+          </ScrollView>
           <OptionsPortal />
         </Host>
       </SafeAreaView>
