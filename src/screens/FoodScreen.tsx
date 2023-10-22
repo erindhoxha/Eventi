@@ -21,7 +21,7 @@ import {
 import SearchBar from '../components/SearchBar/SearchBar';
 import RestaurantCard from '../components/RestaurantCard/RestaurantCard';
 import useResults from '../hooks/useResults';
-import * as Location from 'expo-location';
+import OptionsPortal from '../components/OptionsPortal/OptionsPortal';
 
 const { width } = Dimensions.get('window');
 const ITEM_SIZE = width * 0.82;
@@ -33,30 +33,6 @@ const FoodScreen = () => {
     setValue(e.nativeEvent.text);
   };
   const { results, request, error, loading } = useResults();
-
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
-
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
-      }
-
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-    })();
-  }, []);
-
-  let text = 'Waiting..';
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-    console.log(text);
-  }
 
   const onSubmit = async (term: string) => {
     request(term);
@@ -128,43 +104,7 @@ const FoodScreen = () => {
               ) : null}
             </Box>
           </Box>
-          <Portal>
-            <Fab bg="blue600" h={50} w={50}>
-              <Button p="none" bg="transparent" justifyContent="flex-end">
-                <Box rounded="sm" bg="white" p="sm">
-                  <MagnusText fontSize="MagnusText100">Cheer</MagnusText>
-                </Box>
-                <Icon
-                  name="user"
-                  color="blue600"
-                  h={50}
-                  w={50}
-                  rounded="circle"
-                  ml="md"
-                  bg="white"
-                />
-              </Button>
-              <Button
-                p="none"
-                bg="transparent"
-                justifyContent="flex-end"
-                disabled
-              >
-                <Box rounded="sm" bg="white" p="sm">
-                  <MagnusText fontSize="MagnusText100">Boost</MagnusText>
-                </Box>
-                <Icon
-                  name="user"
-                  color="blue600"
-                  h={50}
-                  w={50}
-                  rounded="circle"
-                  ml="md"
-                  bg="white"
-                />
-              </Button>
-            </Fab>
-          </Portal>
+          <OptionsPortal />
         </Host>
       </SafeAreaView>
     </ThemeProvider>
