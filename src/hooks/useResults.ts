@@ -19,6 +19,7 @@ const useResults = () => {
         })
         .then((res) => {
           setResults(res.data.businesses);
+          setError(null);
         });
     } catch (error) {
       setError(error);

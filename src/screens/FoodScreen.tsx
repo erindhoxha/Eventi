@@ -11,21 +11,14 @@ import {
 import {
   Text as MagnusText,
   ThemeProvider,
-  Button,
-  Icon,
   Host,
-  Fab,
-  Portal,
   Box,
 } from 'react-native-magnus';
 import SearchBar from '../components/SearchBar/SearchBar';
 import RestaurantCard from '../components/RestaurantCard/RestaurantCard';
 import useResults from '../hooks/useResults';
 import OptionsPortal from '../components/OptionsPortal/OptionsPortal';
-
-const { width } = Dimensions.get('window');
-const ITEM_SIZE = width * 0.82;
-const SPACING = 24;
+import RestaurantList from '../components/RestaurantList/RestaurantList';
 
 const FoodScreen = () => {
   const [value, setValue] = useState('');
@@ -64,37 +57,8 @@ const FoodScreen = () => {
                 <ActivityIndicator />
               </Box>
             ) : null}
-
             {results && results.length > 0 && (
-              <>
-                <Box mx="lg">
-                  <MagnusText
-                    color="dark"
-                    fontWeight="bold"
-                    fontSize="2xl"
-                    mt="xl"
-                    mb="md"
-                  >
-                    In your area
-                  </MagnusText>
-                </Box>
-                <Box>
-                  <FlatList
-                    snapToAlignment="center"
-                    snapToInterval={ITEM_SIZE + SPACING}
-                    decelerationRate="fast"
-                    bounces={false}
-                    horizontal
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                    data={results}
-                    renderItem={({ item }) => (
-                      <RestaurantCard width={ITEM_SIZE} item={item} />
-                    )}
-                    keyExtractor={(item) => `friend-list-item-${item.id}`}
-                  />
-                </Box>
-              </>
+              <RestaurantList results={results} />
             )}
             <Box m="lg">
               {results && results.length ? (
