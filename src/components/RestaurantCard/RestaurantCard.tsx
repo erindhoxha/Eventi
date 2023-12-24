@@ -8,6 +8,13 @@ export type RestaurantCardProps = {
   name: string;
   image_url: string;
   price: string;
+  location: {
+   address1: string;
+   city: string;
+   state: string;
+   zip_code: string;
+  };
+  display_phone: string;
   rating: number;
   review_count: number;
   is_closed: boolean;

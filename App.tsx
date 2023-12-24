@@ -1,9 +1,37 @@
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import React from 'react';
+import {
+ NavigationNavigator,
+ NavigationProp,
+ NavigationState,
+ createAppContainer,
+} from 'react-navigation';
+import {
+ createStackNavigator,
+ NavigationStackProp,
+} from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import FoodScreen from './src/screens/FoodScreen';
 import RestaurantScreen from './src/screens/RestaurantScreen';
 import { Icon, Text } from 'react-native-magnus';
+import { RestaurantCardProps } from './src/components/RestaurantCard/RestaurantCard';
+
+export type RootStackParamList = {
+ Food: undefined;
+ Bookmarks: undefined;
+ Restaurant: {
+  restaurantName: string;
+  restaurant: RestaurantCardProps['item'];
+ };
+};
+
+type Navigation = NavigationStackProp<'Restaurant'>;
+
+export type RootStackProps = {
+ [Route in keyof RootStackParamList]: NavigationStackProp<
+  'params',
+  RootStackParamList[Route]
+ >;
+};
 
 const RootStack = createStackNavigator(
  {
@@ -75,9 +103,7 @@ const TabNavigator = createBottomTabNavigator(
     return (
      <>
       <Icon
-       focused={focused}
        name={icon}
-       backgroundColor="#000"
        color={tintColor}
        fontSize={24}
        fontFamily="FontAwesome"

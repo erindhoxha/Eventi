@@ -1,15 +1,21 @@
 import React from 'react';
-import { SafeAreaView, StatusBar, View } from 'react-native';
+import { Linking, SafeAreaView, StatusBar, View } from 'react-native';
 import {
  Box,
+ Button,
  Host,
  Image,
  Text as MagnusText,
  ThemeProvider,
 } from 'react-native-magnus';
+import { RootStackProps } from '../../App';
 
-const RestaurantScreen = ({ navigation }) => {
- const restaurant = navigation.getParam('restaurant');
+const RestaurantScreen = ({
+ navigation,
+}: {
+ navigation: RootStackProps['Restaurant'];
+}) => {
+ const { restaurant } = navigation.state.params;
  return (
   <ThemeProvider>
    <StatusBar barStyle="dark-content" />
@@ -29,14 +35,25 @@ const RestaurantScreen = ({ navigation }) => {
        </MagnusText>
        <Box
         style={{
-         gap: 8,
+         gap: 4,
         }}
        >
-        <MagnusText color="gray600" fontSize="xl">
+        <MagnusText color="gray600" fontSize="md">
          {restaurant?.location.address1}
         </MagnusText>
-        <MagnusText color="gray600" fontSize="xl">
-         {restaurant?.display_phone}
+        {restaurant?.display_phone ? (
+         <MagnusText
+          onPress={() => {
+           Linking.openURL(`tel:${restaurant.display_phone}`);
+          }}
+          color="blue500"
+          fontSize="md"
+         >
+          {restaurant.display_phone}
+         </MagnusText>
+        ) : null}
+        <MagnusText color="gray600" fontSize="md">
+         {restaurant?.price}
         </MagnusText>
        </Box>
       </Box>
