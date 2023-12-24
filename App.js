@@ -2,11 +2,18 @@ import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import FoodScreen from './src/screens/FoodScreen';
+import RestaurantScreen from './src/screens/RestaurantScreen';
 import { Icon, Text } from 'react-native-magnus';
 
 const FoodStack = createStackNavigator(
  {
   Food: FoodScreen,
+  Restaurant: {
+   screen: RestaurantScreen,
+   navigationOptions: ({ navigation }) => ({
+    title: navigation.getParam('restaurantName', 'Restaurant Details'),
+   }),
+  },
  },
  {
   defaultNavigationOptions: {

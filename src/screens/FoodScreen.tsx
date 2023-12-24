@@ -13,6 +13,7 @@ import {
  ThemeProvider,
  Host,
  Box,
+ Button,
 } from 'react-native-magnus';
 import SearchBar from '../components/SearchBar/SearchBar';
 import useResults from '../hooks/useResults';
@@ -20,7 +21,7 @@ import OptionsPortal from '../components/OptionsPortal/OptionsPortal';
 import RestaurantList from '../components/RestaurantList/RestaurantList';
 import HorizontalLine from '../components/HorizontalLine/HorizontalLine';
 
-const FoodScreen = () => {
+const FoodScreen = ({ navigation }) => {
  const [value, setValue] = useState('');
  const [searchTerm, setSearchTerm] = useState('');
  const onChange = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
@@ -87,7 +88,18 @@ const FoodScreen = () => {
        </Box>
 
        {results && results.length > 0 && (
-        <RestaurantList title={`In your area`} results={results} />
+        <>
+         <RestaurantList title={`In your area`} results={results} />
+         <Button
+          onPress={() =>
+           navigation.navigate('Restaurant', {
+            restaurantName: 'Hello',
+           })
+          }
+         >
+          View more
+         </Button>
+        </>
        )}
 
        <HorizontalLine fade />
