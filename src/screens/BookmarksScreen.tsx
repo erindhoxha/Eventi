@@ -1,6 +1,11 @@
 import React from 'react';
 import { SafeAreaView, ScrollView, StatusBar, View } from 'react-native';
-import { Host, Text as MagnusText, ThemeProvider } from 'react-native-magnus';
+import {
+ Box,
+ Host,
+ Text as MagnusText,
+ ThemeProvider,
+} from 'react-native-magnus';
 
 const BookmarksScreen = () => {
  return (
@@ -17,15 +22,22 @@ const BookmarksScreen = () => {
       }}
      >
       <View style={{ backgroundColor: 'white', flexGrow: 1 }}>
-       <MagnusText
-        color="gray900"
-        fontWeight="bold"
-        fontSize="4xl"
-        mt="md"
-        mb="md"
-       >
-        Bookmarks
-       </MagnusText>
+       <Box flex={1} pt="lg">
+        <Box mx="lg">
+         <MagnusText
+          color="gray900"
+          fontWeight="bold"
+          fontSize="4xl"
+          mt="md"
+          mb="md"
+         >
+          Bookmarks
+         </MagnusText>
+         <MagnusText color="gray900" fontSize="xl" mt="md" mb="md">
+          You have no bookmarks yet.
+         </MagnusText>
+        </Box>
+       </Box>
       </View>
      </ScrollView>
     </Host>

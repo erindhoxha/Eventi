@@ -46,6 +46,8 @@ const BookmarksStack = createStackNavigator(
    headerTintColor: '#fff',
    headerStyle: {
     backgroundColor: '#000',
+    shadowColor: 'transparent', // this covers iOS
+    elevation: 0, // this covers Android
    },
    title: 'Foodle',
   },
