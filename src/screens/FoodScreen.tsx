@@ -13,7 +13,6 @@ import {
  ThemeProvider,
  Host,
  Box,
- Button,
 } from 'react-native-magnus';
 import SearchBar from '../components/SearchBar/SearchBar';
 import useResults from '../hooks/useResults';
@@ -88,18 +87,15 @@ const FoodScreen = ({ navigation }) => {
        </Box>
 
        {results && results.length > 0 && (
-        <>
-         <RestaurantList title={`In your area`} results={results} />
-         <Button
-          onPress={() =>
-           navigation.navigate('Restaurant', {
-            restaurantName: 'Hello',
-           })
-          }
-         >
-          View more
-         </Button>
-        </>
+        <RestaurantList
+         title={`In your area`}
+         results={results}
+         onPress={(item) => {
+          navigation.navigate('Restaurant', {
+           restaurantName: item.name,
+          });
+         }}
+        />
        )}
 
        <HorizontalLine fade />
@@ -108,13 +104,26 @@ const FoodScreen = ({ navigation }) => {
         <RestaurantList
          title="Budget friendly"
          results={budgetFriendlyResults}
+         onPress={(item) => {
+          navigation.navigate('Restaurant', {
+           restaurantName: item.name,
+          });
+         }}
         />
        )}
 
        <HorizontalLine fade />
 
        {results && results.length > 0 && (
-        <RestaurantList title="Classy Sundays" results={classyResults} />
+        <RestaurantList
+         title="Classy Sundays"
+         results={classyResults}
+         onPress={(item) => {
+          navigation.navigate('Restaurant', {
+           restaurantName: item.name,
+          });
+         }}
+        />
        )}
        <Box m="lg">
         {results && results.length ? (
