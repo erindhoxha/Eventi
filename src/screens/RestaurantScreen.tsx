@@ -24,7 +24,7 @@ const RestaurantScreen = ({
 
  return (
   <ThemeProvider>
-   <StatusBar barStyle="dark-content" />
+   <StatusBar barStyle="light-content" />
    <SafeAreaView style={{ flex: 1 }}>
     <Host>
      <ScrollView

@@ -4,7 +4,6 @@ import {
  StatusBar,
  NativeSyntheticEvent,
  TextInputChangeEventData,
- ActivityIndicator,
  View,
  ScrollView,
 } from 'react-native';

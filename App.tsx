@@ -14,6 +14,7 @@ import FoodScreen from './src/screens/FoodScreen';
 import RestaurantScreen from './src/screens/RestaurantScreen';
 import { Icon, Text } from 'react-native-magnus';
 import { RestaurantCardProps } from './src/components/RestaurantCard/RestaurantCard';
+import BookmarksScreen from './src/screens/BookmarksScreen';
 
 export type RootStackParamList = {
  Food: undefined;
@@ -31,15 +32,13 @@ export type RootStackProps = {
  >;
 };
 
-const RootStack = createStackNavigator(
+const BookmarksStack = createStackNavigator(
  {
-  Food: FoodScreen,
-  Bookmarks: FoodScreen,
-  Restaurant: {
-   screen: RestaurantScreen,
-   navigationOptions: ({ navigation }) => ({
-    title: navigation.getParam('restaurantName', 'Restaurant Details'),
-   }),
+  Bookmarks: {
+   screen: BookmarksScreen,
+   navigationOptions: {
+    title: 'Bookmarks',
+   },
   },
  },
  {
@@ -53,7 +52,7 @@ const RootStack = createStackNavigator(
  }
 );
 
-const FoodStack = createStackNavigator(
+const RootStack = createStackNavigator(
  {
   Food: FoodScreen,
   Restaurant: {
@@ -62,12 +61,20 @@ const FoodStack = createStackNavigator(
     title: navigation.getParam('restaurantName', 'Restaurant Details'),
    }),
   },
+  Bookmarks: {
+   screen: BookmarksScreen,
+   navigationOptions: {
+    title: 'Bookmarks',
+   },
+  },
  },
  {
   defaultNavigationOptions: {
    headerTintColor: '#fff',
    headerStyle: {
     backgroundColor: '#000',
+    shadowColor: 'transparent', // this covers iOS
+    elevation: 0, // this covers Android
    },
    title: 'Foodle',
   },
@@ -76,8 +83,8 @@ const FoodStack = createStackNavigator(
 
 const TabNavigator = createBottomTabNavigator(
  {
-  Home: FoodStack,
-  Bookmarks: RootStack,
+  Home: RootStack,
+  Bookmarks: BookmarksStack,
  },
  {
   tabBarOptions: {
