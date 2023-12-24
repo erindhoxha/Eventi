@@ -79,7 +79,7 @@ const FoodScreen = ({ navigation }) => {
       <Box flex={1} pt="lg">
        <Box mx="lg">
         <MagnusText
-         color="dark"
+         color="gray900"
          fontWeight="bold"
          fontSize="4xl"
          mt="md"
@@ -114,17 +114,18 @@ const FoodScreen = ({ navigation }) => {
 
        <HorizontalLine fade />
 
-       {results && results.length > 0 && (
-        <RestaurantList
-         title="Budget friendly"
-         results={budgetFriendlyResults}
-         onPress={navigateToRestaurant}
-        />
+       {budgetFriendlyResults && budgetFriendlyResults.length > 0 && (
+        <>
+         <RestaurantList
+          title="Budget friendly"
+          results={budgetFriendlyResults}
+          onPress={navigateToRestaurant}
+         />
+         <HorizontalLine fade />
+        </>
        )}
 
-       <HorizontalLine fade />
-
-       {results && results.length > 0 && (
+       {classyResults && classyResults.length > 0 && (
         <RestaurantList
          title="Classy Sundays"
          results={classyResults}

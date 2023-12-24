@@ -39,7 +39,7 @@ const RestaurantScreen = ({
        <Image source={{ uri: restaurant?.image_url }} h={200} />
        <Box pt="lg" px="lg">
         <MagnusText
-         color="dark"
+         color="gray900"
          fontWeight="bold"
          fontSize="4xl"
          mt="md"

@@ -23,12 +23,7 @@ const SearchBar = ({ loading, onChange, onSubmit }: SearchBarProps) => {
      loading ? (
       <Spinner />
      ) : (
-      <Icon
-       name="search"
-       color="gray700"
-       fontSize="title"
-       fontFamily="FontAwesome"
-      />
+      <Icon name="search" color="gray700" fontFamily="FontAwesome" />
      )
     }
     p="md"

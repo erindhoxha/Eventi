@@ -23,12 +23,7 @@ const Spinner = () => {
 
  return (
   <Animated.View style={{ transform: [{ rotate: spin }] }}>
-   <Icon
-    name="circle-notch"
-    color="gray700"
-    fontSize="title"
-    fontFamily="FontAwesome5"
-   />
+   <Icon name="circle-notch" color="gray700" fontFamily="FontAwesome5" />
   </Animated.View>
  );
 };

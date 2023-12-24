@@ -32,7 +32,7 @@ const RestaurantList = ({
  return (
   <Box>
    <Box mx="lg">
-    <MagnusText color="dark" fontWeight="bold" fontSize="xl" mb="md">
+    <MagnusText color="gray900" fontWeight="bold" fontSize="xl" mb="md">
      {title}
     </MagnusText>
    </Box>
