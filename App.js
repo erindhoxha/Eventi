@@ -7,7 +7,6 @@ import { Icon, Text } from 'react-native-magnus';
 const FoodStack = createStackNavigator(
  {
   Food: FoodScreen,
-  Home: FoodScreen,
  },
  {
   defaultNavigationOptions: {
