@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Dimensions, FlatList } from 'react-native';
 import { Box, Text as MagnusText } from 'react-native-magnus';
 import RestaurantCard, {
@@ -21,8 +21,16 @@ const RestaurantList = ({
  title,
  onPress,
 }: RestaurantListPropTypes) => {
+ const flatListRef = useRef<FlatList>(null);
+
+ useEffect(() => {
+  if (flatListRef.current) {
+   flatListRef.current.scrollToOffset({ animated: true, offset: 0 });
+  }
+ }, [results]);
+
  return (
-  <>
+  <Box>
    <Box mx="lg">
     <MagnusText color="dark" fontWeight="bold" fontSize="xl" mb="md">
      {title}
@@ -30,6 +38,7 @@ const RestaurantList = ({
    </Box>
    <Box>
     <FlatList
+     ref={flatListRef}
      snapToAlignment="center"
      snapToInterval={ITEM_SIZE + SPACING}
      decelerationRate="fast"
@@ -45,10 +54,10 @@ const RestaurantList = ({
        onPress={() => onPress(item)}
       />
      )}
-     keyExtractor={(item) => `friend-list-item-${item.id}`}
+     keyExtractor={(item) => `restaurant-list-item-${item.id}`}
     />
    </Box>
-  </>
+  </Box>
  );
 };
 

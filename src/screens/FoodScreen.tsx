@@ -19,6 +19,7 @@ import useResults from '../hooks/useResults';
 import OptionsPortal from '../components/OptionsPortal/OptionsPortal';
 import RestaurantList from '../components/RestaurantList/RestaurantList';
 import HorizontalLine from '../components/HorizontalLine/HorizontalLine';
+import { RestaurantCardProps } from '../components/RestaurantCard/RestaurantCard';
 
 const FoodScreen = ({ navigation }) => {
  const [value, setValue] = useState('');
@@ -44,6 +45,13 @@ const FoodScreen = ({ navigation }) => {
  useEffect(() => {
   request('pizza');
  }, []);
+
+ const navigateToRestaurant = (item: RestaurantCardProps['item']) => {
+  navigation.navigate('Restaurant', {
+   restaurantName: item.name,
+   restaurant: item,
+  });
+ };
 
  return (
   <ThemeProvider>
@@ -90,11 +98,7 @@ const FoodScreen = ({ navigation }) => {
         <RestaurantList
          title={`In your area`}
          results={results}
-         onPress={(item) => {
-          navigation.navigate('Restaurant', {
-           restaurantName: item.name,
-          });
-         }}
+         onPress={navigateToRestaurant}
         />
        )}
 
@@ -104,11 +108,7 @@ const FoodScreen = ({ navigation }) => {
         <RestaurantList
          title="Budget friendly"
          results={budgetFriendlyResults}
-         onPress={(item) => {
-          navigation.navigate('Restaurant', {
-           restaurantName: item.name,
-          });
-         }}
+         onPress={navigateToRestaurant}
         />
        )}
 
@@ -118,11 +118,7 @@ const FoodScreen = ({ navigation }) => {
         <RestaurantList
          title="Classy Sundays"
          results={classyResults}
-         onPress={(item) => {
-          navigation.navigate('Restaurant', {
-           restaurantName: item.name,
-          });
-         }}
+         onPress={navigateToRestaurant}
         />
        )}
        <Box m="lg">
