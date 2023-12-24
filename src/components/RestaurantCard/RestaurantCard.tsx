@@ -4,23 +4,37 @@ import { Box, Text as MagnusText } from 'react-native-magnus';
 
 export type RestaurantCardProps = {
  item: {
+  alias: string;
+  categories: Array<{
+   alias: string;
+   title: string;
+  }>;
+  coordinates: {
+   latitude: number;
+   longitude: number;
+  };
+  display_phone: string;
+  distance: number;
   id: string;
-  name: string;
   image_url: string;
-  price: string;
+  is_closed: boolean;
   location: {
    address1: string;
+   address2: string;
+   address3: string;
    city: string;
+   country: string;
+   display_address: string[];
    state: string;
    zip_code: string;
   };
-  display_phone: string;
+  name: string;
+  phone: string;
+  price: string;
   rating: number;
   review_count: number;
-  is_closed: boolean;
-  categories: {
-   title: string;
-  }[];
+  transactions: string[];
+  url: string;
  };
  width: number;
  onPress: () => void;

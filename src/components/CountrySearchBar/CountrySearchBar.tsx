@@ -2,33 +2,26 @@ import React from 'react';
 import { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 import { Input, Icon, Text } from 'react-native-magnus';
 
-type SearchBarProps = {
+type CountrySearchBar = {
  onChange: (e: NativeSyntheticEvent<TextInputChangeEventData>) => void;
  onSubmit: (text: string) => void;
 };
 
-const SearchBar = ({ onChange, onSubmit }: SearchBarProps) => {
+const CountrySearchBar = ({ onChange, onSubmit }: CountrySearchBar) => {
  const onSearchSubmit = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
   onSubmit(e.nativeEvent.text);
  };
  return (
   <>
    <Text color="gray800" fontWeight="500" fontSize="sm" mt="md">
-    What kind of food are you craving?
+    Searching in:
    </Text>
    <Input
-    suffix={
-     <Icon
-      name="search"
-      color="gray700"
-      fontSize="title"
-      fontFamily="FontAwesome"
-     />
-    }
+    value="Sydney, Australia"
     p="md"
     fontSize="lg"
     borderWidth={0}
-    placeholder="E.g. pizza, sushi"
+    placeholder="E.g. Sydney, Australia"
     mt="sm"
     bg="gray100"
     onChange={(e) => onChange(e)}
@@ -38,4 +31,4 @@ const SearchBar = ({ onChange, onSubmit }: SearchBarProps) => {
  );
 };
 
-export default SearchBar;
+export default CountrySearchBar;

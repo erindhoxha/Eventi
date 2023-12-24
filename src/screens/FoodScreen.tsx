@@ -20,6 +20,8 @@ import OptionsPortal from '../components/OptionsPortal/OptionsPortal';
 import RestaurantList from '../components/RestaurantList/RestaurantList';
 import HorizontalLine from '../components/HorizontalLine/HorizontalLine';
 import { RestaurantCardProps } from '../components/RestaurantCard/RestaurantCard';
+import CountrySearchBar from '../components/CountrySearchBar/CountrySearchBar';
+import { RefreshControl } from 'react-native-gesture-handler';
 
 const FoodScreen = ({ navigation }) => {
  const [value, setValue] = useState('');
@@ -27,7 +29,7 @@ const FoodScreen = ({ navigation }) => {
  const onChange = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
   setValue(e.nativeEvent.text);
  };
- const { results, request, error, loading } = useResults();
+ const { results, request, error, loading, isRefreshing } = useResults();
 
  const onSubmit = async (term: string) => {
   setSearchTerm(term);
@@ -58,13 +60,18 @@ const FoodScreen = ({ navigation }) => {
    <StatusBar barStyle="light-content" />
    <SafeAreaView style={{ flex: 1 }}>
     <Host>
-     <ScrollView>
+     <ScrollView
+      refreshControl={
+       <RefreshControl
+        size={14}
+        refreshing={isRefreshing}
+        onRefresh={() => {
+         request(searchTerm);
+        }}
+       />
+      }
+     >
       <Box flex={1} pt="lg">
-       {loading ? (
-        <Box m="lg">
-         <ActivityIndicator />
-        </Box>
-       ) : null}
        <Box mx="lg">
         <MagnusText
          color="dark"
@@ -83,9 +90,7 @@ const FoodScreen = ({ navigation }) => {
         />
        </Box>
        <Box mx="lg" mb="lg">
-        <MagnusText color="gray800" fontWeight="500" fontSize="sm" mt="md">
-         Search for food or restaurant name
-        </MagnusText>
+        <CountrySearchBar onChange={onChange} onSubmit={onSubmit} />
         <SearchBar onChange={onChange} onSubmit={onSubmit} />
         {error && (
          <MagnusText color="red500" fontSize="md" mt="sm">

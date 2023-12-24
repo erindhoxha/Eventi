@@ -24,8 +24,6 @@ export type RootStackParamList = {
  };
 };
 
-type Navigation = NavigationStackProp<'Restaurant'>;
-
 export type RootStackProps = {
  [Route in keyof RootStackParamList]: NavigationStackProp<
   'params',

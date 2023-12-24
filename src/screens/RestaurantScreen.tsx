@@ -1,8 +1,13 @@
 import React from 'react';
-import { Linking, SafeAreaView, StatusBar, View } from 'react-native';
+import {
+ Linking,
+ SafeAreaView,
+ ScrollView,
+ StatusBar,
+ View,
+} from 'react-native';
 import {
  Box,
- Button,
  Host,
  Image,
  Text as MagnusText,
@@ -16,48 +21,70 @@ const RestaurantScreen = ({
  navigation: RootStackProps['Restaurant'];
 }) => {
  const { restaurant } = navigation.state.params;
+
  return (
   <ThemeProvider>
    <StatusBar barStyle="dark-content" />
    <SafeAreaView style={{ flex: 1 }}>
     <Host>
-     <View>
-      <Image source={{ uri: restaurant?.image_url }} h={300} />
-      <Box pt="lg" px="lg">
-       <MagnusText
-        color="dark"
-        fontWeight="bold"
-        fontSize="4xl"
-        mt="md"
-        mb="md"
-       >
-        {restaurant?.name}
-       </MagnusText>
-       <Box
-        style={{
-         gap: 4,
-        }}
-       >
-        <MagnusText color="gray600" fontSize="md">
-         {restaurant?.location.address1}
+     <ScrollView
+      contentContainerStyle={{
+       flex: 1,
+      }}
+      style={{
+       backgroundColor: 'black',
+      }}
+     >
+      <View style={{ backgroundColor: 'white', flexGrow: 1 }}>
+       <Image source={{ uri: restaurant?.image_url }} h={200} />
+       <Box pt="lg" px="lg">
+        <MagnusText
+         color="dark"
+         fontWeight="bold"
+         fontSize="4xl"
+         mt="md"
+         mb="md"
+        >
+         {restaurant?.name}
         </MagnusText>
-        {restaurant?.display_phone ? (
-         <MagnusText
-          onPress={() => {
-           Linking.openURL(`tel:${restaurant.display_phone}`);
-          }}
-          color="blue500"
-          fontSize="md"
-         >
-          {restaurant.display_phone}
+        <Box
+         style={{
+          gap: 4,
+         }}
+        >
+         <MagnusText color="gray600" fontSize="md">
+          {restaurant?.location.address1}
          </MagnusText>
-        ) : null}
-        <MagnusText color="gray600" fontSize="md">
-         {restaurant?.price}
-        </MagnusText>
+         {restaurant?.display_phone ? (
+          <MagnusText
+           onPress={() => {
+            Linking.openURL(`tel:${restaurant.display_phone}`);
+           }}
+           color="blue500"
+           fontSize="md"
+          >
+           {restaurant.display_phone}
+          </MagnusText>
+         ) : null}
+         <MagnusText color="gray600" fontSize="md">
+          {restaurant?.is_closed ? 'Closed' : 'Open now'}
+         </MagnusText>
+         <MagnusText color="gray600" fontSize="md">
+          Categories: {restaurant?.categories.map((c) => c.title).join(', ')}
+         </MagnusText>
+         <MagnusText color="gray600" fontSize="md">
+          Rating: {restaurant?.rating} stars
+         </MagnusText>
+         <MagnusText color="gray600" fontSize="md">
+          Reviews: {restaurant?.review_count}
+         </MagnusText>
+         <MagnusText color="gray600" fontSize="md">
+          Price: {restaurant?.price}
+         </MagnusText>
+        </Box>
        </Box>
-      </Box>
-     </View>
+      </View>
+     </ScrollView>
     </Host>
    </SafeAreaView>
   </ThemeProvider>
