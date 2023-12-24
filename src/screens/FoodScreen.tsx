@@ -22,6 +22,7 @@ import HorizontalLine from '../components/HorizontalLine/HorizontalLine';
 import { RestaurantCardProps } from '../components/RestaurantCard/RestaurantCard';
 import CountrySearchBar from '../components/CountrySearchBar/CountrySearchBar';
 import { RefreshControl } from 'react-native-gesture-handler';
+import useLocation from '../hooks/useLocation';
 
 const FoodScreen = ({ navigation }) => {
  const [value, setValue] = useState('');
@@ -54,6 +55,10 @@ const FoodScreen = ({ navigation }) => {
    restaurant: item,
   });
  };
+
+ const { location, error: locationError } = useLocation();
+
+ console.log(location);
 
  return (
   <ThemeProvider>
@@ -91,7 +96,7 @@ const FoodScreen = ({ navigation }) => {
        </Box>
        <Box mx="lg" mb="lg">
         <CountrySearchBar onChange={onChange} onSubmit={onSubmit} />
-        <SearchBar onChange={onChange} onSubmit={onSubmit} />
+        <SearchBar loading={loading} onChange={onChange} onSubmit={onSubmit} />
         {error && (
          <MagnusText color="red500" fontSize="md" mt="sm">
           Something went wrong on our end. Please try again.

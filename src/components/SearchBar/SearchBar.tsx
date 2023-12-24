@@ -1,13 +1,15 @@
 import React from 'react';
 import { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 import { Input, Icon, Text } from 'react-native-magnus';
+import Spinner from '../Spinner/Spinner';
 
 type SearchBarProps = {
+ loading?: boolean;
  onChange: (e: NativeSyntheticEvent<TextInputChangeEventData>) => void;
  onSubmit: (text: string) => void;
 };
 
-const SearchBar = ({ onChange, onSubmit }: SearchBarProps) => {
+const SearchBar = ({ loading, onChange, onSubmit }: SearchBarProps) => {
  const onSearchSubmit = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
   onSubmit(e.nativeEvent.text);
  };
@@ -18,12 +20,16 @@ const SearchBar = ({ onChange, onSubmit }: SearchBarProps) => {
    </Text>
    <Input
     suffix={
-     <Icon
-      name="search"
-      color="gray700"
-      fontSize="title"
-      fontFamily="FontAwesome"
-     />
+     loading ? (
+      <Spinner />
+     ) : (
+      <Icon
+       name="search"
+       color="gray700"
+       fontSize="title"
+       fontFamily="FontAwesome"
+      />
+     )
     }
     p="md"
     fontSize="lg"
