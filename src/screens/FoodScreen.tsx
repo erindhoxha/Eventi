@@ -18,10 +18,10 @@ import useResults from '../hooks/useResults';
 import OptionsPortal from '../components/OptionsPortal/OptionsPortal';
 import RestaurantList from '../components/RestaurantList/RestaurantList';
 import HorizontalLine from '../components/HorizontalLine/HorizontalLine';
-import { RestaurantCardProps } from '../components/RestaurantCard/RestaurantCard';
 import CountrySearchBar from '../components/CountrySearchBar/CountrySearchBar';
 import { RefreshControl } from 'react-native-gesture-handler';
 import useLocation from '../hooks/useLocation';
+import { RestaurantCardProps } from '../components/RestaurantCard/types';
 
 const FoodScreen = ({ navigation }) => {
  const [value, setValue] = useState('');
@@ -45,7 +45,7 @@ const FoodScreen = ({ navigation }) => {
  });
 
  useEffect(() => {
-  request('pizza');
+  request('food near me');
  }, []);
 
  const navigateToRestaurant = (item: RestaurantCardProps['item']) => {
@@ -140,7 +140,6 @@ const FoodScreen = ({ navigation }) => {
        </Box>
       </Box>
      </ScrollView>
-     <OptionsPortal />
     </Host>
    </SafeAreaView>
   </ThemeProvider>

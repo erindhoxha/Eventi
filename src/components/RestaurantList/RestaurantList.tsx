@@ -1,9 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { Dimensions, FlatList } from 'react-native';
 import { Box, Text as MagnusText } from 'react-native-magnus';
-import RestaurantCard, {
- RestaurantCardProps,
-} from '../RestaurantCard/RestaurantCard';
+import RestaurantCard from '../RestaurantCard/RestaurantCard';
+import { RestaurantCardProps } from '../RestaurantCard/types';
 
 const { width } = Dimensions.get('window');
 
@@ -11,8 +10,8 @@ const ITEM_SIZE = width * 0.82;
 const SPACING = 24;
 
 interface RestaurantListPropTypes {
- results: RestaurantCardProps['item'][];
  title: string;
+ results: RestaurantCardProps['item'][];
  onPress: (item: RestaurantCardProps['item']) => void;
 }
 

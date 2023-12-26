@@ -13,8 +13,8 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import FoodScreen from './src/screens/FoodScreen';
 import RestaurantScreen from './src/screens/RestaurantScreen';
 import { Icon, Text } from 'react-native-magnus';
-import { RestaurantCardProps } from './src/components/RestaurantCard/RestaurantCard';
 import BookmarksScreen from './src/screens/BookmarksScreen';
+import { RestaurantCardProps } from './src/components/RestaurantCard/types';
 
 export type RootStackParamList = {
  Food: undefined;
