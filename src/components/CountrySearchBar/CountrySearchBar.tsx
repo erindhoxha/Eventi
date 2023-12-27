@@ -15,7 +15,7 @@ const CountrySearchBar = ({ value, onChange, onSubmit }: CountrySearchBar) => {
  return (
   <>
    <Text color="gray800" fontWeight="500" fontSize="sm" mt="md">
-    Searching in:
+    Search in your area
    </Text>
    <Input
     value={value}

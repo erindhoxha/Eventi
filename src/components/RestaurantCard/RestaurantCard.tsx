@@ -40,11 +40,6 @@ const RestaurantCard = ({ item, width, onPress }: RestaurantCardProps) => {
        {item.review_count} reviews / {item.rating} stars
       </MagnusText>
      </Box>
-     <Box row alignItems="center">
-      <MagnusText color="green800" fontWeight="bold" fontSize="xl">
-       {item.price}
-      </MagnusText>
-     </Box>
     </Box>
    </Box>
   </Pressable>

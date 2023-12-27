@@ -44,7 +44,7 @@ const BookmarksStack = createStackNavigator(
     shadowColor: 'transparent', // this covers iOS
     elevation: 0, // this covers Android
    },
-   title: 'Foodle',
+   title: 'Eventi',
   },
  }
 );
@@ -54,7 +54,7 @@ function LogoTitle() {
   <Image
    style={{ width: 200, height: 35 }}
    resizeMode="contain"
-   source={require('./assets/foodle.png')}
+   source={require('./assets/eventi.png')}
   />
  );
 }
@@ -88,7 +88,7 @@ const RootStack = createStackNavigator(
     shadowColor: 'transparent', // this covers iOS
     elevation: 0, // this covers Android
    },
-   title: 'Foodle',
+   title: 'Eventi',
   },
  }
 );

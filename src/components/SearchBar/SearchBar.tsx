@@ -16,7 +16,7 @@ const SearchBar = ({ loading, onChange, onSubmit }: SearchBarProps) => {
  return (
   <>
    <Text color="gray800" fontWeight="500" fontSize="sm" mt="md">
-    What kind of food are you craving?
+    Search for events, food or more
    </Text>
    <Input
     suffix={
@@ -29,7 +29,7 @@ const SearchBar = ({ loading, onChange, onSubmit }: SearchBarProps) => {
     p="md"
     fontSize="lg"
     borderWidth={0}
-    placeholder="E.g. pizza, sushi"
+    placeholder="E.g. pizza, museum, discount store"
     mt="sm"
     bg="gray100"
     onChange={(e) => onChange(e)}
