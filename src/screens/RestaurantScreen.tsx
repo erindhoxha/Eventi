@@ -38,12 +38,24 @@ const RestaurantScreen = ({
        backgroundColor: 'black',
       }}
      >
-      <View style={{ backgroundColor: 'white', flexGrow: 1 }}>
-       {restaurant?.image_url !== '' ? (
-        <Image source={{ uri: restaurant?.image_url }} h={200} />
-       ) : (
-        <Image source={require('../../assets/splash.png')} h={200} />
-       )}
+      <View
+       style={{
+        backgroundColor: 'white',
+        flexGrow: 1,
+       }}
+      >
+       <View
+        style={{
+         backgroundColor: 'black',
+        }}
+       >
+        {restaurant?.image_url !== '' ? (
+         <Image source={{ uri: restaurant?.image_url }} h={200} />
+        ) : (
+         <Image source={require('../../assets/splash.png')} h={200} />
+        )}
+       </View>
+
        <Box pt="lg" px="lg">
         <Box row justifyContent="space-between" alignItems="flex-start">
          <Box flex={1}>

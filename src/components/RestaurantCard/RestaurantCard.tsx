@@ -11,7 +11,7 @@ const RestaurantCard = ({ item, width, onPress }: RestaurantCardProps) => {
      rounded="xl"
      h={150}
      bgImg={{
-      uri: item.image_url,
+      uri: item.image_url || 'https://picsum.photos/id/42/450',
      }}
     >
      <Box
