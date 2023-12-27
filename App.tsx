@@ -1,10 +1,5 @@
 import React from 'react';
-import {
- NavigationNavigator,
- NavigationProp,
- NavigationState,
- createAppContainer,
-} from 'react-navigation';
+import { createAppContainer } from 'react-navigation';
 import {
  createStackNavigator,
  NavigationStackProp,
@@ -12,7 +7,7 @@ import {
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import FoodScreen from './src/screens/FoodScreen';
 import RestaurantScreen from './src/screens/RestaurantScreen';
-import { Icon, Text } from 'react-native-magnus';
+import { Icon, Image, Text } from 'react-native-magnus';
 import BookmarksScreen from './src/screens/BookmarksScreen';
 import { RestaurantCardProps } from './src/components/RestaurantCard/types';
 
@@ -54,9 +49,24 @@ const BookmarksStack = createStackNavigator(
  }
 );
 
+function LogoTitle() {
+ return (
+  <Image
+   style={{ width: 200, height: 35 }}
+   resizeMode="contain"
+   source={require('./assets/foodle.png')}
+  />
+ );
+}
+
 const RootStack = createStackNavigator(
  {
-  Food: FoodScreen,
+  Food: {
+   screen: FoodScreen,
+   navigationOptions: {
+    headerTitle: () => <LogoTitle />,
+   },
+  },
   Restaurant: {
    screen: RestaurantScreen,
    navigationOptions: ({ navigation }) => ({
