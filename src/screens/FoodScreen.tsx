@@ -22,6 +22,10 @@ import { RefreshControl } from 'react-native-gesture-handler';
 import useLocation from '../hooks/useLocation';
 import { RestaurantCardProps } from '../components/RestaurantCard/types';
 import useReverseGeocode from '../hooks/useReverseGeocoding';
+import {
+ SafeAreaProvider,
+ initialWindowMetrics,
+} from 'react-native-safe-area-context';
 
 const FoodScreen = ({ navigation }) => {
  const [country, setCountry] = useState('');
@@ -73,7 +77,7 @@ const FoodScreen = ({ navigation }) => {
  useEffect(() => {
   if (place.data?.country && !country) {
    request('food near me', place.data?.country);
-   setCountry(place.data?.country);
+   setCountry(place.data?.state);
   }
  }, [place.data?.country, locationLoading]);
 
@@ -85,9 +89,9 @@ const FoodScreen = ({ navigation }) => {
  };
 
  return (
-  <ThemeProvider>
-   <StatusBar barStyle="light-content" />
-   <SafeAreaView style={{ flex: 1 }}>
+  <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+   <ThemeProvider>
+    <StatusBar barStyle="light-content" />
     <Host>
      <ScrollView
       refreshControl={
@@ -165,7 +169,7 @@ const FoodScreen = ({ navigation }) => {
        {midRangeResults && midRangeResults.length > 0 && (
         <>
          <RestaurantList
-          title="Mid-range restaurants"
+          title="Mid-range"
           results={midRangeResults}
           onPress={navigateToRestaurant}
          />
@@ -175,7 +179,7 @@ const FoodScreen = ({ navigation }) => {
 
        {classyResults && classyResults.length > 0 && (
         <RestaurantList
-         title="Classy restaurants"
+         title="Classy"
          results={classyResults}
          onPress={navigateToRestaurant}
         />
@@ -190,8 +194,8 @@ const FoodScreen = ({ navigation }) => {
       </Box>
      </ScrollView>
     </Host>
-   </SafeAreaView>
-  </ThemeProvider>
+   </ThemeProvider>
+  </SafeAreaProvider>
  );
 };
 

@@ -100,14 +100,14 @@ const TabNavigator = createBottomTabNavigator(
  },
  {
   tabBarOptions: {
-   safeAreaInset: { bottom: 24 },
+   safeAreaInset: { bottom: 36 },
    activeTintColor: '#fff',
    labelStyle: {
     display: 'none',
    },
    style: {
     backgroundColor: '#000',
-    padding: 24,
+    padding: 12,
    },
   },
   defaultNavigationOptions: ({ navigation }) => ({
