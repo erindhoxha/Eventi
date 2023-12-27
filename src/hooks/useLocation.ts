@@ -1,12 +1,36 @@
 import { useEffect, useState } from 'react';
 import * as Location from 'expo-location';
 
-const useLocation = () => {
+type Coords = {
+ accuracy: number;
+ altitude: number;
+ altitudeAccuracy: number;
+ heading: number;
+ latitude: number;
+ longitude: number;
+ speed: number;
+};
+
+type Location = {
+ coords: Coords;
+ timestamp: number;
+};
+
+interface UseLocationPropTypes {
+ location: Location | null;
+ error: Error | null;
+ loading: boolean;
+}
+
+const useLocation = (): UseLocationPropTypes => {
  const [location, setLocation] = useState(null);
  const [error, setError] = useState(null);
+ const [loading, setLoading] = useState(false);
 
  useEffect(() => {
   (async () => {
+   setLoading(true);
+   console.log('Loading...');
    let { status } = await Location.requestForegroundPermissionsAsync();
    if (status !== 'granted') {
     setError('Permission to access location was denied');
@@ -15,12 +39,15 @@ const useLocation = () => {
 
    let location = await Location.getCurrentPositionAsync({});
    setLocation(location);
+   console.log('Loaded!');
+   setLoading(false);
   })();
  }, []);
 
  return {
   location,
   error,
+  loading,
  };
 };
 

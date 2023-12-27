@@ -15,38 +15,67 @@ import {
 } from 'react-native-magnus';
 import SearchBar from '../components/SearchBar/SearchBar';
 import useResults from '../hooks/useResults';
-import OptionsPortal from '../components/OptionsPortal/OptionsPortal';
 import RestaurantList from '../components/RestaurantList/RestaurantList';
 import HorizontalLine from '../components/HorizontalLine/HorizontalLine';
 import CountrySearchBar from '../components/CountrySearchBar/CountrySearchBar';
 import { RefreshControl } from 'react-native-gesture-handler';
 import useLocation from '../hooks/useLocation';
 import { RestaurantCardProps } from '../components/RestaurantCard/types';
+import useReverseGeocode from '../hooks/useReverseGeocoding';
 
 const FoodScreen = ({ navigation }) => {
- const [value, setValue] = useState('');
- const [searchTerm, setSearchTerm] = useState('');
- const onChange = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
-  setValue(e.nativeEvent.text);
- };
+ const [country, setCountry] = useState('');
+ const [food, setFood] = useState('');
+
  const { results, request, error, loading, isRefreshing } = useResults();
 
- const onSubmit = async (term: string) => {
-  setSearchTerm(term);
-  request(term);
+ const {
+  location,
+  error: locationError,
+  loading: locationLoading,
+ } = useLocation();
+
+ const place = useReverseGeocode(
+  location?.coords?.latitude,
+  location?.coords?.longitude
+ );
+
+ const onChangeCountry = (
+  e: NativeSyntheticEvent<TextInputChangeEventData>
+ ) => {
+  setCountry(e.nativeEvent.text);
+ };
+
+ const onChangeFood = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
+  setFood(e.nativeEvent.text);
+ };
+
+ const onSubmitCountry = async (term: string) => {
+  request(food || 'Anything', term);
+ };
+
+ const onSubmitFood = async (term: string) => {
+  request(term, country || place.data?.country);
  };
 
  const budgetFriendlyResults = results.filter((result) => {
   return result.price === '$';
  });
 
- const classyResults = results.filter((result) => {
+ const midRangeResults = results.filter((result) => {
   return result.price === '$$';
  });
 
+ const classyResults = results.filter((result) => {
+  return result.price === '$$$';
+ });
+
  useEffect(() => {
-  request('food near me');
- }, []);
+  if (place.data?.country && !country) {
+   request('food near me', place.data?.country);
+   setCountry(place.data?.country);
+  }
+ }, [place.data?.country, locationLoading]);
 
  const navigateToRestaurant = (item: RestaurantCardProps['item']) => {
   navigation.navigate('Restaurant', {
@@ -54,10 +83,6 @@ const FoodScreen = ({ navigation }) => {
    restaurant: item,
   });
  };
-
- const { location, error: locationError } = useLocation();
-
- console.log(location);
 
  return (
   <ThemeProvider>
@@ -68,9 +93,9 @@ const FoodScreen = ({ navigation }) => {
       refreshControl={
        <RefreshControl
         size={14}
-        refreshing={isRefreshing}
+        refreshing={isRefreshing || locationLoading}
         onRefresh={() => {
-         request(searchTerm);
+         request(food || 'food near me', country || place.data?.country);
         }}
        />
       }
@@ -94,8 +119,21 @@ const FoodScreen = ({ navigation }) => {
         />
        </Box>
        <Box mx="lg" mb="lg">
-        <CountrySearchBar onChange={onChange} onSubmit={onSubmit} />
-        <SearchBar loading={loading} onChange={onChange} onSubmit={onSubmit} />
+        <CountrySearchBar
+         value={country}
+         onChange={onChangeCountry}
+         onSubmit={onSubmitCountry}
+        />
+        <SearchBar
+         loading={loading}
+         onChange={onChangeFood}
+         onSubmit={onSubmitFood}
+        />
+        {locationError && (
+         <MagnusText color="red500" fontSize="md" mt="sm">
+          {locationError.message}
+         </MagnusText>
+        )}
         {error && (
          <MagnusText color="red500" fontSize="md" mt="sm">
           Something went wrong on our end. Please try again.
@@ -124,9 +162,20 @@ const FoodScreen = ({ navigation }) => {
         </>
        )}
 
+       {midRangeResults && midRangeResults.length > 0 && (
+        <>
+         <RestaurantList
+          title="Mid-range restaurants"
+          results={midRangeResults}
+          onPress={navigateToRestaurant}
+         />
+         <HorizontalLine fade />
+        </>
+       )}
+
        {classyResults && classyResults.length > 0 && (
         <RestaurantList
-         title="Classy Sundays"
+         title="Classy restaurants"
          results={classyResults}
          onPress={navigateToRestaurant}
         />

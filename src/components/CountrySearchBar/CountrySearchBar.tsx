@@ -1,13 +1,14 @@
 import React from 'react';
 import { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
-import { Input, Icon, Text } from 'react-native-magnus';
+import { Input, Text } from 'react-native-magnus';
 
 type CountrySearchBar = {
+ value: string;
  onChange: (e: NativeSyntheticEvent<TextInputChangeEventData>) => void;
  onSubmit: (text: string) => void;
 };
 
-const CountrySearchBar = ({ onChange, onSubmit }: CountrySearchBar) => {
+const CountrySearchBar = ({ value, onChange, onSubmit }: CountrySearchBar) => {
  const onSearchSubmit = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
   onSubmit(e.nativeEvent.text);
  };
@@ -17,7 +18,7 @@ const CountrySearchBar = ({ onChange, onSubmit }: CountrySearchBar) => {
     Searching in:
    </Text>
    <Input
-    value="Sydney, Australia"
+    value={value}
     p="md"
     fontSize="lg"
     borderWidth={0}

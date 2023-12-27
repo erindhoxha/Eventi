@@ -11,7 +11,6 @@ import {
  Box,
  Button,
  Host,
- Icon,
  Image,
  Text as MagnusText,
  Tag,
@@ -40,7 +39,11 @@ const RestaurantScreen = ({
       }}
      >
       <View style={{ backgroundColor: 'white', flexGrow: 1 }}>
-       <Image source={{ uri: restaurant?.image_url }} h={200} />
+       {restaurant?.image_url !== '' ? (
+        <Image source={{ uri: restaurant?.image_url }} h={200} />
+       ) : (
+        <Image source={require('../../assets/splash.png')} h={200} />
+       )}
        <Box pt="lg" px="lg">
         <Box row justifyContent="space-between" alignItems="flex-start">
          <Box flex={1}>
@@ -69,7 +72,7 @@ const RestaurantScreen = ({
         >
          <Box row>
           <MagnusText fontWeight="bold" mr="sm">
-           {restaurant?.rating}
+           {restaurant?.rating} stars
           </MagnusText>
           <MagnusText color="gray500">
            ({restaurant?.review_count} reviews)

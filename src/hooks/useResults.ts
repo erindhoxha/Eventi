@@ -7,7 +7,7 @@ const useResults = () => {
  const [error, setError] = useState(null);
  const [isRefreshing, setIsRefreshing] = useState(false);
 
- const request = useCallback(async (term: string) => {
+ const request = useCallback(async (term: string, location: string) => {
   setLoading(true);
   setIsRefreshing(true);
   try {
@@ -16,7 +16,7 @@ const useResults = () => {
      params: {
       limit: 50,
       term,
-      location: 'sydney',
+      location,
      },
     })
     .then((res) => {
