@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import {
+ Dimensions,
  Linking,
- Pressable,
  SafeAreaView,
  ScrollView,
  StatusBar,
@@ -10,11 +10,11 @@ import {
 import {
  Box,
  Button,
+ Carousel,
  Host,
  Image,
  Text as MagnusText,
  Tag,
- Text,
  ThemeProvider,
 } from 'react-native-magnus';
 import { RootStackProps } from '../../App';
@@ -28,11 +28,15 @@ const RestaurantScreen = ({
 }) => {
  const { id } = navigation.state.params;
 
+ const width = Dimensions.get('window').width;
+
  const { result, request, loading, error } = useResult(id);
 
  useEffect(() => {
   request(id);
  }, []);
+
+ console.log('Result', JSON.stringify(result, null, 2));
 
  if (loading) {
   return (
@@ -64,15 +68,25 @@ const RestaurantScreen = ({
        <View
         style={{
          backgroundColor: 'black',
+         height: 200,
         }}
        >
-        {result?.image_url !== '' ? (
-         <Image source={{ uri: result?.image_url }} h={200} />
-        ) : (
-         <Image source={require('../../assets/splash.png')} h={200} />
-        )}
+        <Carousel showIndicators={false}>
+         {result?.photos.map((photo) => (
+          <Carousel.Item
+           key={photo}
+           children={
+            <Image
+             source={{ uri: photo }}
+             h={200}
+             w={width}
+             resizeMode="cover"
+            />
+           }
+          />
+         ))}
+        </Carousel>
        </View>
-
        <Box pt="lg" px="lg">
         <Box row justifyContent="space-between" alignItems="flex-start">
          <Box flex={1}>

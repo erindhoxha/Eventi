@@ -9,14 +9,13 @@ import FoodScreen from './src/screens/FoodScreen';
 import RestaurantScreen from './src/screens/RestaurantScreen';
 import { Icon, Image, Text } from 'react-native-magnus';
 import BookmarksScreen from './src/screens/BookmarksScreen';
-import { RestaurantCardProps } from './src/components/RestaurantCard/types';
 
 export type RootStackParamList = {
  Food: undefined;
  Bookmarks: undefined;
  Restaurant: {
   restaurantName: string;
-  restaurant: RestaurantCardProps['item'];
+  id: string;
  };
 };
 
