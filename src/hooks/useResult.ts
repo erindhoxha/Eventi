@@ -56,15 +56,17 @@ const useResult = (id: string) => {
  const [error, setError] = useState(null);
  const [isRefreshing, setIsRefreshing] = useState(false);
 
- const request = useCallback(async (term: string) => {
+ const request = useCallback(async (id: string) => {
   setLoading(true);
   setIsRefreshing(true);
   try {
    await yelp.get(`/${id}`).then((res) => {
+    console.log('Getting', res);
     setResult(res.data);
     setError(null);
    });
   } catch (error) {
+   console.log('Error', error);
    setError(error);
   } finally {
    setLoading(false);

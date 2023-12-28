@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
- SafeAreaView,
  StatusBar,
  NativeSyntheticEvent,
  TextInputChangeEventData,
@@ -84,7 +83,7 @@ const FoodScreen = ({ navigation }) => {
  const navigateToRestaurant = (item: RestaurantCardProps['item']) => {
   navigation.navigate('Restaurant', {
    restaurantName: item.name,
-   restaurant: item,
+   id: item.id,
   });
  };
 

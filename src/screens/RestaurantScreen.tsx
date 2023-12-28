@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
  Linking,
  Pressable,
@@ -14,16 +14,33 @@ import {
  Image,
  Text as MagnusText,
  Tag,
+ Text,
  ThemeProvider,
 } from 'react-native-magnus';
 import { RootStackProps } from '../../App';
+import useResult from '../hooks/useResult';
+import Spinner from '../components/Spinner/Spinner';
 
 const RestaurantScreen = ({
  navigation,
 }: {
  navigation: RootStackProps['Restaurant'];
 }) => {
- const { restaurant } = navigation.state.params;
+ const { id } = navigation.state.params;
+
+ const { result, request, loading, error } = useResult(id);
+
+ useEffect(() => {
+  request(id);
+ }, []);
+
+ if (loading) {
+  return (
+   <Box justifyContent="center" py="2xl">
+    <Spinner size={24} />
+   </Box>
+  );
+ }
 
  return (
   <ThemeProvider>
@@ -49,8 +66,8 @@ const RestaurantScreen = ({
          backgroundColor: 'black',
         }}
        >
-        {restaurant?.image_url !== '' ? (
-         <Image source={{ uri: restaurant?.image_url }} h={200} />
+        {result?.image_url !== '' ? (
+         <Image source={{ uri: result?.image_url }} h={200} />
         ) : (
          <Image source={require('../../assets/splash.png')} h={200} />
         )}
@@ -66,15 +83,15 @@ const RestaurantScreen = ({
            mt="md"
            mb="md"
           >
-           {restaurant?.name}
+           {result?.name}
           </MagnusText>
          </Box>
          <Tag
           mt={4}
-          bg={restaurant?.is_closed ? 'red700' : 'green700'}
+          bg={result?.is_closed ? 'red700' : 'green700'}
           color="white"
          >
-          {restaurant?.is_closed ? 'Closed' : 'Open now'}
+          {result?.is_closed ? 'Closed' : 'Open now'}
          </Tag>
         </Box>
         <Box
@@ -84,28 +101,28 @@ const RestaurantScreen = ({
         >
          <Box row>
           <MagnusText fontWeight="bold" mr="sm">
-           {restaurant?.rating} stars
+           {result?.rating} stars
           </MagnusText>
           <MagnusText color="gray500">
-           ({restaurant?.review_count} reviews)
+           ({result?.review_count} reviews)
           </MagnusText>
          </Box>
          <MagnusText color="gray600" fontSize="md">
-          {restaurant?.location.display_address.join(' ')}
+          {result?.location.display_address.join(' ')}
          </MagnusText>
          <MagnusText color="gray600" fontSize="md">
-          Type of venue: {restaurant?.categories.map((c) => c.title).join(', ')}
+          Type of venue: {result?.categories.map((c) => c.title).join(', ')}
          </MagnusText>
-         {restaurant?.display_phone ? (
+         {result?.display_phone ? (
           <Button
            mt="md"
            color="white"
            fontSize="md"
            onPress={() => {
-            Linking.openURL(`tel:${restaurant.display_phone}`);
+            Linking.openURL(`tel:${result.display_phone}`);
            }}
           >
-           Call the restaurant
+           Call the venue
           </Button>
          ) : null}
         </Box>

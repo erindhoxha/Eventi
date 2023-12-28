@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
 import { Icon } from 'react-native-magnus';
 
-const Spinner = () => {
+const Spinner = ({ size }: { size?: number }) => {
  const spinValue = useRef(new Animated.Value(0)).current;
 
  useEffect(() => {
@@ -23,7 +23,12 @@ const Spinner = () => {
 
  return (
   <Animated.View style={{ transform: [{ rotate: spin }] }}>
-   <Icon name="circle-notch" color="gray700" fontFamily="FontAwesome5" />
+   <Icon
+    fontSize={size}
+    name="circle-notch"
+    color="gray700"
+    fontFamily="FontAwesome5"
+   />
   </Animated.View>
  );
 };
