@@ -55,7 +55,7 @@ const FoodScreen = ({ navigation }) => {
  };
 
  const onSubmitCountry = async (term: string) => {
-  request(food || 'Anything', term);
+  request(food || 'food near me', term);
  };
 
  const onSubmitFood = async (term: string) => {
@@ -76,7 +76,7 @@ const FoodScreen = ({ navigation }) => {
 
  useEffect(() => {
   if (place.data?.country && !country) {
-   request('food near me', place.data?.country);
+   request('food near me', place.data?.state);
    setCountry(place.data?.state);
   }
  }, [place.data?.country, locationLoading]);
@@ -99,7 +99,7 @@ const FoodScreen = ({ navigation }) => {
         size={14}
         refreshing={isRefreshing || locationLoading}
         onRefresh={() => {
-         request(food || 'food near me', country || place.data?.country);
+         request(food || 'food near me', country || place.data?.state);
         }}
        />
       }
