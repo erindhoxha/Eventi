@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import {
  Dimensions,
  Linking,
+ Platform,
  SafeAreaView,
  ScrollView,
  StatusBar,
@@ -12,6 +13,7 @@ import {
  Button,
  Carousel,
  Host,
+ Icon,
  Image,
  Text as MagnusText,
  Tag,
@@ -20,6 +22,7 @@ import {
 import { RootStackProps } from '../../App';
 import useResult from '../hooks/useResult';
 import Spinner from '../components/Spinner/Spinner';
+import useReview from '../hooks/useReview';
 
 const RestaurantScreen = ({
  navigation,
@@ -32,11 +35,21 @@ const RestaurantScreen = ({
 
  const { result, request, loading, error } = useResult(id);
 
+ const {
+  result: reviewResults,
+  request: reviewRequest,
+  loadingReviews,
+  errorReviews,
+ } = useReview(id);
+
  useEffect(() => {
   request(id);
+  reviewRequest(id);
  }, []);
 
- console.log('Result', JSON.stringify(result, null, 2));
+ // console.log('Result', JSON.stringify(result, null, 2));
+
+ console.log('Reviews', JSON.stringify(reviewResults, null, 2));
 
  if (loading) {
   return (
@@ -53,12 +66,24 @@ const RestaurantScreen = ({
     <Host>
      <ScrollView
       contentContainerStyle={{
-       flex: 1,
+       flexGrow: 1,
       }}
       style={{
-       backgroundColor: 'black',
+       backgroundColor: 'white',
       }}
      >
+      {Platform.OS === 'ios' && (
+       <View
+        style={{
+         backgroundColor: 'black',
+         height: 300,
+         position: 'absolute',
+         top: -300,
+         left: 0,
+         right: 0,
+        }}
+       />
+      )}
       <View
        style={{
         backgroundColor: 'white',
@@ -68,7 +93,7 @@ const RestaurantScreen = ({
        <View
         style={{
          backgroundColor: 'black',
-         height: 200,
+         height: 250,
         }}
        >
         <Carousel showIndicators={false}>
@@ -78,7 +103,7 @@ const RestaurantScreen = ({
            children={
             <Image
              source={{ uri: photo }}
-             h={200}
+             h={250}
              w={width}
              resizeMode="cover"
             />
@@ -128,17 +153,30 @@ const RestaurantScreen = ({
           Type of venue: {result?.categories.map((c) => c.title).join(', ')}
          </MagnusText>
          {result?.display_phone ? (
-          <Button
-           mt="md"
-           color="white"
-           fontSize="md"
-           onPress={() => {
-            Linking.openURL(`tel:${result.display_phone}`);
-           }}
-          >
-           Call the venue
-          </Button>
+          <MagnusText color="gray600" fontSize="md">
+           Phone: {result?.display_phone}
+          </MagnusText>
          ) : null}
+        </Box>
+        <Box mt="lg" pb="lg">
+         {reviewResults &&
+          reviewResults?.reviews.map((review) => (
+           <Box key={review.id} mt="lg" p="lg" bg="gray100" rounded="md">
+            <Box mb="lg" row justifyContent="space-between" alignItems="center">
+             <MagnusText fontSize="md" fontWeight="bold">
+              {review.user.name}
+             </MagnusText>
+             <Box row>
+              {Array.from({ length: review.rating }).map((_, index) => (
+               <Icon key={index} name="star" color="yellow500" fontSize="sm" />
+              ))}
+             </Box>
+            </Box>
+            <MagnusText fontSize="md" color="gray600">
+             {review.text}
+            </MagnusText>
+           </Box>
+          ))}
         </Box>
        </Box>
       </View>
