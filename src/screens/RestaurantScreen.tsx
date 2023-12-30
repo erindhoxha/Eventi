@@ -32,15 +32,10 @@ const RestaurantScreen = ({
 
  const width = Dimensions.get('window').width;
 
- const { result, request, loading, error } = useResult(id);
-
+ const resultData = useResult(id);
  const data = useReview(id);
 
- useEffect(() => {
-  request(id);
- }, []);
-
- if (loading) {
+ if (resultData.status === 'loading') {
   return (
    <Box justifyContent="center" py="2xl">
     <Spinner size={24} />
@@ -101,7 +96,7 @@ const RestaurantScreen = ({
         }}
        >
         <Carousel showIndicators={false}>
-         {result?.photos.map((photo) => (
+         {resultData?.data?.photos.map((photo) => (
           <Carousel.Item
            key={photo}
            children={
@@ -119,9 +114,9 @@ const RestaurantScreen = ({
        <Box pt="lg" px="lg">
         <Box row justifyContent="space-between" alignItems="flex-start">
          <Box flex={1}>
-          {error && (
+          {resultData.status === 'error' && (
            <MagnusText color="red500" fontSize="md">
-            {error}
+            {resultData.error.message}
            </MagnusText>
           )}
           <MagnusText
@@ -131,15 +126,15 @@ const RestaurantScreen = ({
            mt="md"
            mb="md"
           >
-           {result?.name}
+           {resultData.data?.name}
           </MagnusText>
          </Box>
          <Tag
           mt={4}
-          bg={result?.is_closed ? 'red700' : 'green700'}
+          bg={resultData.data?.is_closed ? 'red700' : 'green700'}
           color="white"
          >
-          {result?.is_closed ? 'Closed' : 'Open now'}
+          {resultData.data?.is_closed ? 'Closed' : 'Open now'}
          </Tag>
         </Box>
         <Box
@@ -149,21 +144,22 @@ const RestaurantScreen = ({
         >
          <Box row>
           <MagnusText fontWeight="bold" mr="sm">
-           {result?.rating} stars
+           {resultData.data?.rating} stars
           </MagnusText>
           <MagnusText color="gray500">
-           ({result?.review_count} reviews)
+           ({resultData.data?.review_count} reviews)
           </MagnusText>
          </Box>
          <MagnusText color="gray600" fontSize="md">
-          {result?.location.display_address.join(' ')}
+          {resultData.data?.location.display_address.join(' ')}
          </MagnusText>
          <MagnusText color="gray600" fontSize="md">
-          Type of venue: {result?.categories.map((c) => c.title).join(', ')}
+          Type of venue:{' '}
+          {resultData.data?.categories.map((c) => c.title).join(', ')}
          </MagnusText>
-         {result?.display_phone ? (
+         {resultData.data?.display_phone ? (
           <MagnusText color="gray600" fontSize="md">
-           Phone: {result?.display_phone}
+           Phone: {resultData.data?.display_phone}
           </MagnusText>
          ) : null}
         </Box>

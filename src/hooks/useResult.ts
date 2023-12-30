@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react';
 import yelp from '../api/yelp';
+import { useQuery } from 'react-query';
 
 type Category = {
  alias: string;
@@ -50,31 +50,18 @@ type Restaurant = {
  url: string;
 };
 
+const fetchResult = async (id: string): Promise<Restaurant> => {
+ const { data } = await yelp.get(`/${id}`);
+ return data;
+};
+
 const useResult = (id: string) => {
- const [result, setResult] = useState<Restaurant>();
- const [loading, setLoading] = useState(false);
- const [error, setError] = useState(null);
- const [isRefreshing, setIsRefreshing] = useState(false);
-
- const request = useCallback(async (id: string) => {
-  setLoading(true);
-  setIsRefreshing(true);
-  try {
-   await yelp.get(`/${id}`).then((res) => {
-    console.log('Getting', res);
-    setResult(res.data);
-    setError(null);
-   });
-  } catch (error) {
-   console.log('Error', error);
-   setError(error);
-  } finally {
-   setLoading(false);
-   setIsRefreshing(false);
-  }
- }, []);
-
- return { result, loading, error, request, isRefreshing };
+ return useQuery<Restaurant, Error>({
+  queryKey: ['result', id],
+  queryFn: async () => {
+   return fetchResult(id);
+  },
+ });
 };
 
 export default useResult;
