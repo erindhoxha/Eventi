@@ -103,6 +103,17 @@ const FoodScreen = ({ navigation }) => {
   });
  };
 
+ const [isRefreshing, setRefreshing] = useState(false);
+
+ const handleRefresh = async () => {
+  setRefreshing(true);
+  try {
+   await resultsQuery.refetch();
+  } finally {
+   setRefreshing(false);
+  }
+ };
+
  return (
   <SafeAreaProvider initialMetrics={initialWindowMetrics}>
    <ThemeProvider>
@@ -112,10 +123,8 @@ const FoodScreen = ({ navigation }) => {
       refreshControl={
        <RefreshControl
         size={14}
-        refreshing={resultsQuery.isRefetching || locationLoading}
-        onRefresh={() => {
-         resultsQuery.refetch();
-        }}
+        refreshing={isRefreshing}
+        onRefresh={handleRefresh}
        />
       }
      >
