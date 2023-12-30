@@ -68,7 +68,7 @@ const RootStack = createStackNavigator(
     headerTitle: () => <LogoTitle />,
     headerRight: () => (
      <Pressable onPress={() => alert('This is a button!')}>
-      <Text color="white" fontSize={16} mx="lg">
+      <Text fontWeight="500" color="white" fontSize={16} mx="lg">
        Login
       </Text>
      </Pressable>
