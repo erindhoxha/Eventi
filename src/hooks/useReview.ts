@@ -1,8 +1,30 @@
 import { useCallback, useState } from 'react';
 import yelp from '../api/yelp';
 
-const useReview = (id: string) => {
- const [result, setResult] = useState();
+type ReviewResponse = {
+ reviews: Review[];
+ total: number;
+ possible_languages: string[];
+};
+
+type Review = {
+ id: string;
+ url: string;
+ text: string;
+ rating: number;
+ time_created: string;
+ user: User;
+};
+
+type User = {
+ id: string;
+ profile_url: string;
+ image_url: string;
+ name: string;
+};
+
+const useReview = () => {
+ const [result, setResult] = useState<ReviewResponse>();
  const [loading, setLoading] = useState(false);
  const [error, setError] = useState(null);
  const [isRefreshing, setIsRefreshing] = useState(false);

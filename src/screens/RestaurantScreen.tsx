@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import {
  Dimensions,
- Linking,
  Platform,
  SafeAreaView,
  ScrollView,
@@ -10,7 +9,6 @@ import {
 } from 'react-native';
 import {
  Box,
- Button,
  Carousel,
  Host,
  Icon,
@@ -38,18 +36,14 @@ const RestaurantScreen = ({
  const {
   result: reviewResults,
   request: reviewRequest,
-  loadingReviews,
-  errorReviews,
- } = useReview(id);
+  loading: loadingReviews,
+  error: errorReviews,
+ } = useReview();
 
  useEffect(() => {
   request(id);
   reviewRequest(id);
  }, []);
-
- // console.log('Result', JSON.stringify(result, null, 2));
-
- console.log('Reviews', JSON.stringify(reviewResults, null, 2));
 
  if (loading) {
   return (
@@ -115,6 +109,11 @@ const RestaurantScreen = ({
        <Box pt="lg" px="lg">
         <Box row justifyContent="space-between" alignItems="flex-start">
          <Box flex={1}>
+          {error && (
+           <MagnusText color="red500" fontSize="md">
+            {error}
+           </MagnusText>
+          )}
           <MagnusText
            color="gray900"
            fontWeight="bold"
@@ -159,6 +158,12 @@ const RestaurantScreen = ({
          ) : null}
         </Box>
         <Box mt="lg" pb="lg">
+         {errorReviews && (
+          <MagnusText color="red500" fontSize="md">
+           {errorReviews}
+          </MagnusText>
+         )}
+         {loadingReviews && <Spinner />}
          {reviewResults &&
           reviewResults?.reviews.map((review) => (
            <Box key={review.id} mt="lg" p="lg" bg="gray100" rounded="md">
