@@ -1,9 +1,17 @@
 import React from 'react';
 import { Pressable } from 'react-native';
 import { Box, Text as MagnusText } from 'react-native-magnus';
-import { RestaurantCardProps } from './types';
+import { Venue } from '../../types/types';
 
-const RestaurantCard = ({ item, width, onPress }: RestaurantCardProps) => {
+const RestaurantCard = ({
+ item,
+ width,
+ onPress,
+}: {
+ item: Venue;
+ width: number;
+ onPress: () => void;
+}) => {
  return (
   <Pressable onPress={onPress}>
    <Box w={width} mx="lg">

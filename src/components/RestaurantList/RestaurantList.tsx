@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Dimensions, FlatList } from 'react-native';
 import { Box, Text as MagnusText } from 'react-native-magnus';
 import RestaurantCard from '../RestaurantCard/RestaurantCard';
-import { RestaurantCardProps } from '../RestaurantCard/types';
+import { Venue } from '../../types/types';
 
 const { width } = Dimensions.get('window');
 
@@ -11,8 +11,8 @@ const SPACING = 24;
 
 interface RestaurantListPropTypes {
  title: string;
- results: RestaurantCardProps['item'][];
- onPress: (item: RestaurantCardProps['item']) => void;
+ results: Venue[];
+ onPress: (item: Venue) => void;
 }
 
 const RestaurantList = ({

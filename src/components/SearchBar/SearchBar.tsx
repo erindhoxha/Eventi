@@ -5,11 +5,12 @@ import Spinner from '../Spinner/Spinner';
 
 type SearchBarProps = {
  loading?: boolean;
+ value?: string;
  onChange: (e: NativeSyntheticEvent<TextInputChangeEventData>) => void;
  onSubmit: (text: string) => void;
 };
 
-const SearchBar = ({ loading, onChange, onSubmit }: SearchBarProps) => {
+const SearchBar = ({ loading, value, onChange, onSubmit }: SearchBarProps) => {
  const onSearchSubmit = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
   onSubmit(e.nativeEvent.text);
  };
@@ -28,6 +29,7 @@ const SearchBar = ({ loading, onChange, onSubmit }: SearchBarProps) => {
     }
     p="md"
     fontSize="lg"
+    value={value}
     borderWidth={0}
     placeholder="E.g. pizza, museum, discount store"
     mt="sm"

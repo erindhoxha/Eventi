@@ -19,16 +19,17 @@ import HorizontalLine from '../components/HorizontalLine/HorizontalLine';
 import CountrySearchBar from '../components/CountrySearchBar/CountrySearchBar';
 import { RefreshControl } from 'react-native-gesture-handler';
 import useLocation from '../hooks/useLocation';
-import { RestaurantCardProps } from '../components/RestaurantCard/types';
 import useReverseGeocode from '../hooks/useReverseGeocoding';
 import {
  SafeAreaProvider,
  initialWindowMetrics,
 } from 'react-native-safe-area-context';
+import { Venue } from '../types/types';
+import Spinner from '../components/Spinner/Spinner';
 
 const FoodScreen = ({ navigation }) => {
- const [country, setCountry] = useState('');
- const [food, setFood] = useState('');
+ const [country, setCountry] = useState<string | undefined>();
+ const [food, setFood] = useState<string | undefined>();
 
  const {
   location,
@@ -60,18 +61,28 @@ const FoodScreen = ({ navigation }) => {
  const onChangeCountry = (
   e: NativeSyntheticEvent<TextInputChangeEventData>
  ) => {
-  // setCountry(e.nativeEvent.text);
+  setCountry(e.nativeEvent.text);
  };
 
  const onChangeFood = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
-  // setFood(e.nativeEvent.text);
+  setFood(e.nativeEvent.text);
  };
 
- const onSubmitCountry = async (term: string) => {};
+ const onSubmitCountry = async (term: string) => {
+  setQuery((prevQuery) => ({
+   ...prevQuery,
+   country: term,
+  }));
+ };
 
- const onSubmitFood = async (term: string) => {};
+ const onSubmitFood = async (term: string) => {
+  setQuery((prevQuery) => ({
+   ...prevQuery,
+   food: term,
+  }));
+ };
 
- const budgetFriendlyResults = resultsQuery?.data?.businesses?.filter(
+ const budgetFriendlyResults = resultsQuery.data?.businesses?.filter(
   (result) => {
    return result.price === '$';
   }
@@ -85,7 +96,7 @@ const FoodScreen = ({ navigation }) => {
   return result.price === '$$$';
  });
 
- const navigateToRestaurant = (item: RestaurantCardProps['item']) => {
+ const navigateToRestaurant = (item: Venue) => {
   navigation.navigate('Restaurant', {
    restaurantName: item.name,
    id: item.id,
@@ -101,7 +112,7 @@ const FoodScreen = ({ navigation }) => {
       refreshControl={
        <RefreshControl
         size={14}
-        refreshing={resultsQuery.isFetching || locationLoading}
+        refreshing={resultsQuery.isRefetching || locationLoading}
         onRefresh={() => {
          resultsQuery.refetch();
         }}
@@ -128,11 +139,12 @@ const FoodScreen = ({ navigation }) => {
        </Box>
        <Box mx="lg" mb="lg">
         <CountrySearchBar
-         value={country}
+         value={country || query.country}
          onChange={onChangeCountry}
          onSubmit={onSubmitCountry}
         />
         <SearchBar
+         value={food ?? query.food}
          loading={resultsQuery.status === 'loading'}
          onChange={onChangeFood}
          onSubmit={onSubmitFood}
@@ -147,12 +159,18 @@ const FoodScreen = ({ navigation }) => {
           Something went wrong on our end. Please try again.
          </MagnusText>
         )}
+
+        {resultsQuery.status === 'loading' && (
+         <Box py="lg">
+          <Spinner size={20} />
+         </Box>
+        )}
        </Box>
 
-       {resultsQuery.data && resultsQuery.data.length > 0 && (
+       {resultsQuery.data && resultsQuery.data?.businesses?.length > 0 && (
         <RestaurantList
          title={`In your area`}
-         results={resultsQuery.data}
+         results={resultsQuery.data.businesses}
          onPress={navigateToRestaurant}
         />
        )}
@@ -189,9 +207,9 @@ const FoodScreen = ({ navigation }) => {
         />
        )}
        <Box m="lg">
-        {resultsQuery.data && resultsQuery.data.length ? (
+        {resultsQuery.data && resultsQuery.data.businesses.length ? (
          <MagnusText fontWeight="normal" fontSize="md" mt="md">
-          We have found {resultsQuery.data.length} results
+          We have found {resultsQuery.data.businesses.length} results
          </MagnusText>
         ) : null}
        </Box>
