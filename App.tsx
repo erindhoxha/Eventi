@@ -10,6 +10,7 @@ import RestaurantScreen from './src/screens/RestaurantScreen';
 import { Icon, Image, Text } from 'react-native-magnus';
 import BookmarksScreen from './src/screens/BookmarksScreen';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { Pressable } from 'react-native';
 
 export type RootStackParamList = {
  Food: undefined;
@@ -65,6 +66,13 @@ const RootStack = createStackNavigator(
    screen: FoodScreen,
    navigationOptions: {
     headerTitle: () => <LogoTitle />,
+    headerRight: () => (
+     <Pressable onPress={() => alert('This is a button!')}>
+      <Text color="white" fontSize={16} mx="lg">
+       Login
+      </Text>
+     </Pressable>
+    ),
    },
   },
   Restaurant: {
