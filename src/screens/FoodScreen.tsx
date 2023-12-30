@@ -148,7 +148,7 @@ const FoodScreen = ({ navigation }) => {
        </Box>
        <Box mx="lg" mb="lg">
         <CountrySearchBar
-         value={country || query.country}
+         value={country ?? query.country}
          onChange={onChangeCountry}
          onSubmit={onSubmitCountry}
         />
