@@ -30,8 +30,6 @@ const FoodScreen = ({ navigation }) => {
  const [country, setCountry] = useState('');
  const [food, setFood] = useState('');
 
- const { results, request, error, loading, isRefreshing } = useResults();
-
  const {
   location,
   error: locationError,
@@ -43,42 +41,49 @@ const FoodScreen = ({ navigation }) => {
   location?.coords?.longitude
  );
 
- const onChangeCountry = (
-  e: NativeSyntheticEvent<TextInputChangeEventData>
- ) => {
-  setCountry(e.nativeEvent.text);
- };
-
- const onChangeFood = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
-  setFood(e.nativeEvent.text);
- };
-
- const onSubmitCountry = async (term: string) => {
-  request(food || 'food near me', term);
- };
-
- const onSubmitFood = async (term: string) => {
-  request(term, country || place.data?.country);
- };
-
- const budgetFriendlyResults = results.filter((result) => {
-  return result.price === '$';
- });
-
- const midRangeResults = results.filter((result) => {
-  return result.price === '$$';
- });
-
- const classyResults = results.filter((result) => {
-  return result.price === '$$$';
+ const [query, setQuery] = useState({
+  country: 'Sydney',
+  food: 'Food near me',
  });
 
  useEffect(() => {
-  if (place.data?.country && !country) {
-   request('food near me', place.data?.state);
-   setCountry(place.data?.state);
+  setQuery((prevQuery) => ({
+   ...prevQuery,
+   country: place?.data?.state,
+  }));
+
+  console.log(place?.data?.state);
+ }, [place?.data?.state]);
+
+ const resultsQuery = useResults(query.food, query.country);
+
+ const onChangeCountry = (
+  e: NativeSyntheticEvent<TextInputChangeEventData>
+ ) => {
+  // setCountry(e.nativeEvent.text);
+ };
+
+ const onChangeFood = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
+  // setFood(e.nativeEvent.text);
+ };
+
+ const onSubmitCountry = async (term: string) => {};
+
+ const onSubmitFood = async (term: string) => {};
+
+ const budgetFriendlyResults = resultsQuery?.data?.businesses?.filter(
+  (result) => {
+   return result.price === '$';
   }
- }, [place.data?.country, locationLoading]);
+ );
+
+ const midRangeResults = resultsQuery.data?.businesses?.filter((result) => {
+  return result.price === '$$';
+ });
+
+ const classyResults = resultsQuery.data?.businesses?.filter((result) => {
+  return result.price === '$$$';
+ });
 
  const navigateToRestaurant = (item: RestaurantCardProps['item']) => {
   navigation.navigate('Restaurant', {
@@ -96,9 +101,9 @@ const FoodScreen = ({ navigation }) => {
       refreshControl={
        <RefreshControl
         size={14}
-        refreshing={isRefreshing || locationLoading}
+        refreshing={resultsQuery.isFetching || locationLoading}
         onRefresh={() => {
-         request(food || 'food near me', country || place.data?.state);
+         resultsQuery.refetch();
         }}
        />
       }
@@ -128,7 +133,7 @@ const FoodScreen = ({ navigation }) => {
          onSubmit={onSubmitCountry}
         />
         <SearchBar
-         loading={loading}
+         loading={resultsQuery.status === 'loading'}
          onChange={onChangeFood}
          onSubmit={onSubmitFood}
         />
@@ -137,17 +142,17 @@ const FoodScreen = ({ navigation }) => {
           {locationError.message}
          </MagnusText>
         )}
-        {error && (
+        {resultsQuery.status === 'error' && (
          <MagnusText color="red500" fontSize="md" mt="sm">
           Something went wrong on our end. Please try again.
          </MagnusText>
         )}
        </Box>
 
-       {results && results.length > 0 && (
+       {resultsQuery.data && resultsQuery.data.length > 0 && (
         <RestaurantList
          title={`In your area`}
-         results={results}
+         results={resultsQuery.data}
          onPress={navigateToRestaurant}
         />
        )}
@@ -184,9 +189,9 @@ const FoodScreen = ({ navigation }) => {
         />
        )}
        <Box m="lg">
-        {results && results.length ? (
+        {resultsQuery.data && resultsQuery.data.length ? (
          <MagnusText fontWeight="normal" fontSize="md" mt="md">
-          We have found {results.length} results
+          We have found {resultsQuery.data.length} results
          </MagnusText>
         ) : null}
        </Box>
