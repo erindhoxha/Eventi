@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react';
 import yelp from '../api/yelp';
+import { useQuery } from 'react-query';
 
 type ReviewResponse = {
  reviews: Review[];
@@ -23,31 +23,18 @@ type User = {
  name: string;
 };
 
-const useReview = () => {
- const [result, setResult] = useState<ReviewResponse>();
- const [loading, setLoading] = useState(false);
- const [error, setError] = useState(null);
- const [isRefreshing, setIsRefreshing] = useState(false);
+const fetchReviews = async (id: string): Promise<ReviewResponse> => {
+ const { data } = await yelp.get(`/${id}/reviews`);
+ return data;
+};
 
- const request = useCallback(async (id: string) => {
-  setLoading(true);
-  setIsRefreshing(true);
-  try {
-   await yelp.get(`/${id}/reviews`).then((res) => {
-    console.log('Getting', res);
-    setResult(res.data);
-    setError(null);
-   });
-  } catch (error) {
-   console.log('Error', error);
-   setError(error);
-  } finally {
-   setLoading(false);
-   setIsRefreshing(false);
-  }
- }, []);
-
- return { result, loading, error, request, isRefreshing };
+const useReview = (id: string) => {
+ return useQuery<ReviewResponse, Error>({
+  queryKey: ['reviews', id],
+  queryFn: async () => {
+   return fetchReviews(id);
+  },
+ });
 };
 
 export default useReview;

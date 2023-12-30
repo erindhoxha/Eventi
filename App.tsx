@@ -9,6 +9,7 @@ import FoodScreen from './src/screens/FoodScreen';
 import RestaurantScreen from './src/screens/RestaurantScreen';
 import { Icon, Image, Text } from 'react-native-magnus';
 import BookmarksScreen from './src/screens/BookmarksScreen';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 export type RootStackParamList = {
  Food: undefined;
@@ -134,4 +135,14 @@ const TabNavigator = createBottomTabNavigator(
  }
 );
 
-export default createAppContainer(TabNavigator);
+const queryClient = new QueryClient();
+
+const AppContainer = createAppContainer(TabNavigator);
+
+const App = () => (
+ <QueryClientProvider client={queryClient}>
+  <AppContainer />
+ </QueryClientProvider>
+);
+
+export default App;

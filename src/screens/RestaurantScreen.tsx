@@ -21,6 +21,7 @@ import { RootStackProps } from '../../App';
 import useResult from '../hooks/useResult';
 import Spinner from '../components/Spinner/Spinner';
 import useReview from '../hooks/useReview';
+import { RefreshControl } from 'react-native-gesture-handler';
 
 const RestaurantScreen = ({
  navigation,
@@ -33,16 +34,10 @@ const RestaurantScreen = ({
 
  const { result, request, loading, error } = useResult(id);
 
- const {
-  result: reviewResults,
-  request: reviewRequest,
-  loading: loadingReviews,
-  error: errorReviews,
- } = useReview();
+ const data = useReview(id);
 
  useEffect(() => {
   request(id);
-  reviewRequest(id);
  }, []);
 
  if (loading) {
@@ -59,6 +54,21 @@ const RestaurantScreen = ({
    <SafeAreaView style={{ flex: 1 }}>
     <Host>
      <ScrollView
+      // refreshControl={
+      //  <RefreshControl
+      //   size={14}
+      //   refreshing={loading || loadingReviews}
+      //   style={{
+      //    backgroundColor: 'white',
+      //   }}
+      //   tintColor={'white'}
+      //   colors={['white']}
+      //   onRefresh={() => {
+      //    request(id);
+      //    reviewRequest(id);
+      //   }}
+      //  />
+      // }
       contentContainerStyle={{
        flexGrow: 1,
       }}
@@ -158,14 +168,14 @@ const RestaurantScreen = ({
          ) : null}
         </Box>
         <Box mt="lg" pb="lg">
-         {errorReviews && (
+         {data.status === 'loading' && <Spinner />}
+         {data.status === 'error' && (
           <MagnusText color="red500" fontSize="md">
-           {errorReviews}
+           {data.error.message}
           </MagnusText>
          )}
-         {loadingReviews && <Spinner />}
-         {reviewResults &&
-          reviewResults?.reviews.map((review) => (
+         {data &&
+          data.data?.reviews.map((review) => (
            <Box key={review.id} mt="lg" p="lg" bg="gray100" rounded="md">
             <Box mb="lg" row justifyContent="space-between" alignItems="center">
              <MagnusText fontSize="md" fontWeight="bold">
