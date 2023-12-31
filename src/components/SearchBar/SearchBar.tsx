@@ -20,6 +20,7 @@ const SearchBar = ({ loading, value, onChange, onSubmit }: SearchBarProps) => {
     Search for events, food or more
    </Text>
    <Input
+    hitSlop={{ top: 24, bottom: 24, left: 24, right: 24 }}
     suffix={
      loading ? (
       <Spinner />

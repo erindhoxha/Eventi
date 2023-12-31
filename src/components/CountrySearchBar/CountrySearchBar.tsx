@@ -18,6 +18,7 @@ const CountrySearchBar = ({ value, onChange, onSubmit }: CountrySearchBar) => {
     Search in your area
    </Text>
    <Input
+    hitSlop={{ top: 24, bottom: 24, left: 24, right: 24 }}
     value={value}
     p="md"
     fontSize="lg"

@@ -1,5 +1,10 @@
 import React from 'react';
-import { NavigationContainer, RouteProp } from '@react-navigation/native';
+import {
+ NavigationContainer,
+ NavigationProp,
+ RouteProp,
+ useNavigation,
+} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './src/screens/HomeScreen';
 import ResultScreen from './src/screens/ResultScreen';
@@ -9,9 +14,11 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { Pressable } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationStackProp } from 'react-navigation-stack';
+import LoginScreen from './src/screens/LoginScreen';
 
 export type RootStackParamList = {
  Home: undefined;
+ Login: undefined;
  Bookmarks: undefined;
  Restaurant: {
   restaurantName: string;
@@ -29,6 +36,8 @@ export type RootStackProps = {
 export type RoutePropWithParams<Route extends keyof RootStackParamList> =
  RouteProp<RootStackParamList, Route>;
 
+type RootStackNavigationProp = NavigationProp<RootStackParamList>;
+
 const Stack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
 
@@ -45,6 +54,8 @@ function LogoTitle() {
 }
 
 function HomeStack() {
+ const navigation = useNavigation<RootStackNavigationProp>();
+
  return (
   <Stack.Navigator>
    <Stack.Screen
@@ -52,8 +63,11 @@ function HomeStack() {
     component={HomeScreen}
     options={{
      headerTitle: () => <LogoTitle />,
-     headerRight: () => (
-      <Pressable onPress={() => alert('This is a button!')}>
+     headerRight: (props) => (
+      <Pressable
+       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+       onPress={() => navigation.navigate('Login')}
+      >
        <Text fontWeight="500" color="white" fontSize={16} mx="lg">
         Login
        </Text>
@@ -72,6 +86,19 @@ function HomeStack() {
     component={ResultScreen}
     options={(props) => ({
      title: props.route.params?.restaurantName || 'Restaurant Details',
+     headerStyle: {
+      backgroundColor: '#000',
+      shadowColor: 'transparent', // this covers iOS
+      elevation: 0, // this covers Android
+     },
+     headerTintColor: '#fff',
+    })}
+   />
+   <Stack.Screen
+    name="Login"
+    component={LoginScreen}
+    options={(props) => ({
+     title: 'Login',
      headerStyle: {
       backgroundColor: '#000',
       shadowColor: 'transparent', // this covers iOS

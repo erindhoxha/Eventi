@@ -38,7 +38,7 @@ const HomeScreen = ({ navigation }) => {
   loading: locationLoading,
  } = useLocation();
 
- const place = useMockGeocode(
+ const place = useReverseGeocode(
   location?.coords?.latitude,
   location?.coords?.longitude
  );
