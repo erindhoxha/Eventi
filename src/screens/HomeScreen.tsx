@@ -170,12 +170,11 @@ const HomeScreen = ({ navigation }) => {
          </MagnusText>
         )}
 
-        {resultsQuery.status === 'loading' ||
-         (locationLoading && (
-          <Box py="lg">
-           <Spinner size={20} />
-          </Box>
-         ))}
+        {(resultsQuery.status === 'loading' || locationLoading) && (
+         <Box py="lg">
+          <Spinner size={20} />
+         </Box>
+        )}
        </Box>
 
        {resultsQuery.data && resultsQuery.data?.businesses?.length === 0 && (

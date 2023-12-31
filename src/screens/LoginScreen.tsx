@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
  Dimensions,
  Platform,
@@ -19,6 +19,7 @@ import {
 import { RoutePropWithParams } from '../../App';
 
 const LoginScreen = ({ route }: { route: RoutePropWithParams<'Login'> }) => {
+ const [submitted, setSubmitted] = useState(false);
  return (
   <ThemeProvider>
    <StatusBar barStyle="light-content" />
@@ -85,10 +86,35 @@ const LoginScreen = ({ route }: { route: RoutePropWithParams<'Login'> }) => {
           autoCapitalize="none"
           p={10}
           focusBorderColor="blue700"
+          onSubmitEditing={() => {
+           setSubmitted(true);
+          }}
          />
-         <Button block mt="lg" bg="green700" color="white">
-          Send magic link
+         <Button
+          block
+          mt="lg"
+          bg="green700"
+          color="white"
+          onPress={() => {
+           setSubmitted(true);
+          }}
+         >
+          {submitted ? (
+           <>
+            <MagnusText fontSize={15} color="white">
+             Sent <Icon name="check" color="white" ml="md" />
+            </MagnusText>
+           </>
+          ) : (
+           'Send magic link'
+          )}
          </Button>
+         {submitted && (
+          <MagnusText color="gray900" fontSize="sm" mt="lg" mb="md">
+           We have sent you a magic link to your email address. Click on the
+           link to login.
+          </MagnusText>
+         )}
         </Box>
        </View>
       </View>
