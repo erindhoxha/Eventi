@@ -26,6 +26,7 @@ import {
 } from 'react-native-safe-area-context';
 import { Venue } from '../types/types';
 import Spinner from '../components/Spinner/Spinner';
+import useMockGeocode from '../hooks/useMockReverseGeocoding';
 
 const HomeScreen = ({ navigation }) => {
  const [country, setCountry] = useState<string | undefined>();
@@ -37,7 +38,7 @@ const HomeScreen = ({ navigation }) => {
   loading: locationLoading,
  } = useLocation();
 
- const place = useReverseGeocode(
+ const place = useMockGeocode(
   location?.coords?.latitude,
   location?.coords?.longitude
  );
@@ -52,8 +53,6 @@ const HomeScreen = ({ navigation }) => {
    ...prevQuery,
    country: place?.data?.state,
   }));
-
-  console.log(place?.data?.state);
  }, [place?.data?.state]);
 
  const resultsQuery = useResults(query.food, query.country);
@@ -171,11 +170,12 @@ const HomeScreen = ({ navigation }) => {
          </MagnusText>
         )}
 
-        {resultsQuery.status === 'loading' && (
-         <Box py="lg">
-          <Spinner size={20} />
-         </Box>
-        )}
+        {resultsQuery.status === 'loading' ||
+         (locationLoading && (
+          <Box py="lg">
+           <Spinner size={20} />
+          </Box>
+         ))}
        </Box>
 
        {resultsQuery.data && resultsQuery.data?.businesses?.length === 0 && (
@@ -187,14 +187,15 @@ const HomeScreen = ({ navigation }) => {
        )}
 
        {resultsQuery.data && resultsQuery.data?.businesses?.length > 0 && (
-        <RestaurantList
-         title={`In your area`}
-         results={resultsQuery.data.businesses}
-         onPress={navigateToRestaurant}
-        />
+        <>
+         <RestaurantList
+          title={`In your area`}
+          results={resultsQuery.data.businesses}
+          onPress={navigateToRestaurant}
+         />
+         <HorizontalLine fade />
+        </>
        )}
-
-       <HorizontalLine fade />
 
        {budgetFriendlyResults && budgetFriendlyResults.length > 0 && (
         <>

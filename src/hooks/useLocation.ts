@@ -30,7 +30,6 @@ const useLocation = (): UseLocationPropTypes => {
  useEffect(() => {
   (async () => {
    setLoading(true);
-   console.log('Loading...');
    let { status } = await Location.requestForegroundPermissionsAsync();
    if (status !== 'granted') {
     setError('Permission to access location was denied');
@@ -39,7 +38,6 @@ const useLocation = (): UseLocationPropTypes => {
 
    let location = await Location.getCurrentPositionAsync({});
    setLocation(location);
-   console.log('Loaded!');
    setLoading(false);
   })();
  }, []);

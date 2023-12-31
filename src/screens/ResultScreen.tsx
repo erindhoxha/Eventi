@@ -17,18 +17,17 @@ import {
  Tag,
  ThemeProvider,
 } from 'react-native-magnus';
-import { RootStackProps } from '../../App';
+import { RoutePropWithParams } from '../../App';
 import useResult from '../hooks/useResult';
 import Spinner from '../components/Spinner/Spinner';
 import useReview from '../hooks/useReview';
-import { RefreshControl } from 'react-native-gesture-handler';
 
 const ResultScreen = ({
- navigation,
+ route,
 }: {
- navigation: RootStackProps['Restaurant'];
+ route: RoutePropWithParams<'Restaurant'>;
 }) => {
- const { id } = navigation.state.params;
+ const { id } = route.params || {};
 
  const width = Dimensions.get('window').width;
 
