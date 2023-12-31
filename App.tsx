@@ -5,8 +5,8 @@ import {
  NavigationStackProp,
 } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import FoodScreen from './src/screens/FoodScreen';
-import RestaurantScreen from './src/screens/RestaurantScreen';
+import HomeScreen from './src/screens/HomeScreen';
+import ResultScreen from './src/screens/ResultScreen';
 import { Icon, Image, Text } from 'react-native-magnus';
 import BookmarksScreen from './src/screens/BookmarksScreen';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -63,7 +63,7 @@ function LogoTitle() {
 const RootStack = createStackNavigator(
  {
   Food: {
-   screen: FoodScreen,
+   screen: HomeScreen,
    navigationOptions: {
     headerTitle: () => <LogoTitle />,
     headerRight: () => (
@@ -76,7 +76,7 @@ const RootStack = createStackNavigator(
    },
   },
   Restaurant: {
-   screen: RestaurantScreen,
+   screen: ResultScreen,
    navigationOptions: ({ navigation }) => ({
     title: navigation.getParam('restaurantName', 'Restaurant Details'),
    }),

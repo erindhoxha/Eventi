@@ -28,6 +28,10 @@ const RestaurantList = ({
   }
  }, [results]);
 
+ if (!results.length) {
+  return null;
+ }
+
  return (
   <Box>
    <Box mx="lg">

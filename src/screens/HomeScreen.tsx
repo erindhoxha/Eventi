@@ -27,7 +27,7 @@ import {
 import { Venue } from '../types/types';
 import Spinner from '../components/Spinner/Spinner';
 
-const FoodScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation }) => {
  const [country, setCountry] = useState<string | undefined>();
  const [food, setFood] = useState<string | undefined>();
 
@@ -158,11 +158,13 @@ const FoodScreen = ({ navigation }) => {
          onChange={onChangeFood}
          onSubmit={onSubmitFood}
         />
+
         {locationError && (
          <MagnusText color="red500" fontSize="md" mt="sm">
           {locationError.message}
          </MagnusText>
         )}
+
         {resultsQuery.status === 'error' && (
          <MagnusText color="red500" fontSize="md" mt="sm">
           Something went wrong on our end. Please try again.
@@ -175,6 +177,14 @@ const FoodScreen = ({ navigation }) => {
          </Box>
         )}
        </Box>
+
+       {resultsQuery.data && resultsQuery.data?.businesses?.length === 0 && (
+        <Box mx="lg">
+         <MagnusText color="gray900" fontSize="md">
+          No results found
+         </MagnusText>
+        </Box>
+       )}
 
        {resultsQuery.data && resultsQuery.data?.businesses?.length > 0 && (
         <RestaurantList
@@ -230,4 +240,4 @@ const FoodScreen = ({ navigation }) => {
  );
 };
 
-export default FoodScreen;
+export default HomeScreen;

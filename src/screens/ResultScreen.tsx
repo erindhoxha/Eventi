@@ -23,7 +23,7 @@ import Spinner from '../components/Spinner/Spinner';
 import useReview from '../hooks/useReview';
 import { RefreshControl } from 'react-native-gesture-handler';
 
-const RestaurantScreen = ({
+const ResultScreen = ({
  navigation,
 }: {
  navigation: RootStackProps['Restaurant'];
@@ -49,21 +49,6 @@ const RestaurantScreen = ({
    <SafeAreaView style={{ flex: 1 }}>
     <Host>
      <ScrollView
-      // refreshControl={
-      //  <RefreshControl
-      //   size={14}
-      //   refreshing={loading || loadingReviews}
-      //   style={{
-      //    backgroundColor: 'white',
-      //   }}
-      //   tintColor={'white'}
-      //   colors={['white']}
-      //   onRefresh={() => {
-      //    request(id);
-      //    reviewRequest(id);
-      //   }}
-      //  />
-      // }
       contentContainerStyle={{
        flexGrow: 1,
       }}
@@ -198,4 +183,4 @@ const RestaurantScreen = ({
  );
 };
 
-export default RestaurantScreen;
+export default ResultScreen;
