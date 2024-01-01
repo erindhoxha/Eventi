@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import {
  Dimensions,
  Platform,
+ Pressable,
  SafeAreaView,
  ScrollView,
  StatusBar,
@@ -9,6 +10,7 @@ import {
 } from 'react-native';
 import {
  Box,
+ Button,
  Carousel,
  Host,
  Icon,
@@ -115,8 +117,10 @@ const ResultScreen = ({
          </Box>
          <Tag
           mt={4}
-          bg={resultData.data?.is_closed ? 'red700' : 'green700'}
-          color="white"
+          borderColor={resultData.data?.is_closed ? 'red700' : 'blue600'}
+          color={resultData.data?.is_closed ? 'red700' : 'blue600'}
+          borderWidth={1.5}
+          bg="transparent"
          >
           {resultData.data?.is_closed ? 'Closed' : 'Open now'}
          </Tag>
@@ -146,6 +150,20 @@ const ResultScreen = ({
            Phone: {resultData.data?.display_phone}
           </MagnusText>
          ) : null}
+        </Box>
+        <Box mt="lg">
+         <Button block mt="lg" bg="green700" color="white">
+          <Icon
+           name="bookmark"
+           color="white"
+           mr="md"
+           fontSize={15}
+           fontFamily="FontAwesome5"
+          />
+          <MagnusText fontSize={15} color="white">
+           Bookmark
+          </MagnusText>
+         </Button>
         </Box>
         <Box mt="lg" pb="lg">
          {data.status === 'loading' && <Spinner />}
