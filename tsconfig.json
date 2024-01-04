@@ -1,12 +1,15 @@
 {
- "compilerOptions": {
-  "jsx": "react",
-  "outDir": "./dist",
-  "allowJs": true,
-  "target": "es5",
-  "allowSyntheticDefaultImports": true,
-  "esModuleInterop": true
- },
- "include": ["./src/**/*"],
- "extends": "expo/tsconfig.base"
+  "compilerOptions": {
+    "jsx": "react",
+    "outDir": "./dist",
+    "allowJs": true,
+    "target": "es5",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strictNullChecks": true
+  },
+  "include": ["./src/**/*"],
+  "extends": "expo/tsconfig.base"
 }
