@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Dimensions,
   Platform,
@@ -6,7 +6,7 @@ import {
   ScrollView,
   StatusBar,
   View,
-} from 'react-native';
+} from "react-native";
 import {
   Box,
   Button,
@@ -17,25 +17,25 @@ import {
   Text as MagnusText,
   Tag,
   ThemeProvider,
-} from 'react-native-magnus';
-import { RoutePropWithParams } from '../../App';
-import useResult from '../hooks/useResult';
-import Spinner from '../components/Spinner/Spinner';
-import useReview from '../hooks/useReview';
+} from "react-native-magnus";
+import type { RoutePropWithParams } from "../../App";
+import useResult from "../hooks/useResult";
+import Spinner from "../components/Spinner/Spinner";
+import useReview from "../hooks/useReview";
 
 const ResultScreen = ({
   route,
 }: {
-  route: RoutePropWithParams<'Restaurant'>;
+  route: RoutePropWithParams<"Restaurant">;
 }) => {
-  const { id } = route.params || {};
+  const { id } = route.params;
 
-  const width = Dimensions.get('window').width;
+  const width = Dimensions.get("window").width;
 
   const resultData = useResult(id);
   const data = useReview(id);
 
-  if (resultData.status === 'loading') {
+  if (resultData.status === "loading") {
     return (
       <Box justifyContent="center" py="2xl">
         <Spinner size={24} />
@@ -53,15 +53,15 @@ const ResultScreen = ({
               flexGrow: 1,
             }}
             style={{
-              backgroundColor: 'white',
+              backgroundColor: "white",
             }}
           >
-            {Platform.OS === 'ios' && (
+            {Platform.OS === "ios" && (
               <View
                 style={{
-                  backgroundColor: 'black',
+                  backgroundColor: "black",
                   height: 300,
-                  position: 'absolute',
+                  position: "absolute",
                   top: -300,
                   left: 0,
                   right: 0,
@@ -70,36 +70,33 @@ const ResultScreen = ({
             )}
             <View
               style={{
-                backgroundColor: 'white',
+                backgroundColor: "white",
                 flexGrow: 1,
               }}
             >
               <View
                 style={{
-                  backgroundColor: 'black',
+                  backgroundColor: "black",
                   height: 250,
                 }}
               >
                 <Carousel showIndicators={false}>
                   {resultData?.data?.photos.map((photo) => (
-                    <Carousel.Item
-                      key={photo}
-                      children={
-                        <Image
-                          source={{ uri: photo }}
-                          h={250}
-                          w={width}
-                          resizeMode="cover"
-                        />
-                      }
-                    />
+                    <Carousel.Item key={photo}>
+                      <Image
+                        source={{ uri: photo }}
+                        h={250}
+                        w={width}
+                        resizeMode="cover"
+                      />
+                    </Carousel.Item>
                   ))}
                 </Carousel>
               </View>
               <Box pt="lg" px="lg">
                 <Box row justifyContent="space-between" alignItems="flex-start">
                   <Box flex={1}>
-                    {resultData.status === 'error' && (
+                    {resultData.status === "error" && (
                       <MagnusText color="red500" fontSize="md">
                         {resultData.error.message}
                       </MagnusText>
@@ -117,13 +114,21 @@ const ResultScreen = ({
                   <Tag
                     mt={4}
                     borderColor={
-                      resultData.data?.is_closed ? 'red700' : 'blue600'
+                      resultData.data != null && resultData.data?.is_closed
+                        ? "red700"
+                        : "blue600"
                     }
-                    color={resultData.data?.is_closed ? 'red700' : 'blue600'}
+                    color={
+                      resultData.data != null && resultData.data?.is_closed
+                        ? "red700"
+                        : "blue600"
+                    }
                     borderWidth={1.5}
                     bg="transparent"
                   >
-                    {resultData.data?.is_closed ? 'Closed' : 'Open now'}
+                    {resultData.data != null && resultData.data?.is_closed
+                      ? "Closed"
+                      : "Open now"}
                   </Tag>
                 </Box>
                 <Box
@@ -140,13 +145,13 @@ const ResultScreen = ({
                     </MagnusText>
                   </Box>
                   <MagnusText color="gray600" fontSize="md">
-                    {resultData.data?.location.display_address.join(' ')}
+                    {resultData.data?.location.display_address.join(" ")}
                   </MagnusText>
                   <MagnusText color="gray600" fontSize="md">
-                    Type of venue:{' '}
-                    {resultData.data?.categories.map((c) => c.title).join(', ')}
+                    Type of venue:{" "}
+                    {resultData.data?.categories.map((c) => c.title).join(", ")}
                   </MagnusText>
-                  {resultData.data?.display_phone ? (
+                  {resultData.data?.display_phone != null ? (
                     <MagnusText color="gray600" fontSize="md">
                       Phone: {resultData.data?.display_phone}
                     </MagnusText>
@@ -167,48 +172,47 @@ const ResultScreen = ({
                   </Button>
                 </Box>
                 <Box mt="lg" pb="lg">
-                  {data.status === 'loading' && <Spinner />}
-                  {data.status === 'error' && (
+                  {data.status === "loading" && <Spinner />}
+                  {data.status === "error" && (
                     <MagnusText color="red500" fontSize="md">
                       {data.error.message}
                     </MagnusText>
                   )}
-                  {data &&
-                    data.data?.reviews.map((review) => (
+                  {data?.data?.reviews.map((review) => (
+                    <Box
+                      key={review.id}
+                      mt="lg"
+                      p="lg"
+                      bg="gray100"
+                      rounded="md"
+                    >
                       <Box
-                        key={review.id}
-                        mt="lg"
-                        p="lg"
-                        bg="gray100"
-                        rounded="md"
+                        mb="lg"
+                        row
+                        justifyContent="space-between"
+                        alignItems="center"
                       >
-                        <Box
-                          mb="lg"
-                          row
-                          justifyContent="space-between"
-                          alignItems="center"
-                        >
-                          <MagnusText fontSize="md" fontWeight="bold">
-                            {review.user.name}
-                          </MagnusText>
-                          <Box row>
-                            {Array.from({ length: review.rating }).map(
-                              (_, index) => (
-                                <Icon
-                                  key={index}
-                                  name="star"
-                                  color="yellow500"
-                                  fontSize="sm"
-                                />
-                              )
-                            )}
-                          </Box>
-                        </Box>
-                        <MagnusText fontSize="md" color="gray600">
-                          {review.text}
+                        <MagnusText fontSize="md" fontWeight="bold">
+                          {review.user.name}
                         </MagnusText>
+                        <Box row>
+                          {Array.from({ length: review.rating }).map(
+                            (_, index) => (
+                              <Icon
+                                key={index}
+                                name="star"
+                                color="yellow500"
+                                fontSize="sm"
+                              />
+                            ),
+                          )}
+                        </Box>
                       </Box>
-                    ))}
+                      <MagnusText fontSize="md" color="gray600">
+                        {review.text}
+                      </MagnusText>
+                    </Box>
+                  ))}
                 </Box>
               </Box>
             </View>

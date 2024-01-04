@@ -25,7 +25,7 @@ import {
 import type { Venue } from "../types/types";
 import Spinner from "../components/Spinner/Spinner";
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation }: { navigation: any }) => {
   const [country, setCountry] = useState<string | undefined>();
   const [food, setFood] = useState<string | undefined>();
 
@@ -37,10 +37,13 @@ const HomeScreen = ({ navigation }) => {
 
   const place = useReverseGeocode(
     location?.coords?.latitude,
-    location?.coords?.longitude
+    location?.coords?.longitude,
   );
 
-  const [query, setQuery] = useState({
+  const [query, setQuery] = useState<{
+    country: string | undefined;
+    food: string | undefined;
+  }>({
     country: "Sydney",
     food: "Food near me",
   });
@@ -48,14 +51,14 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     setQuery((prevQuery) => ({
       ...prevQuery,
-      country: place?.data?.state,
+      country: place.data?.state,
     }));
-  }, [place?.data?.state]);
+  }, [place.data?.state]);
 
   const resultsQuery = useResults(query.food, query.country);
 
   const onChangeCountry = (
-    e: NativeSyntheticEvent<TextInputChangeEventData>
+    e: NativeSyntheticEvent<TextInputChangeEventData>,
   ) => {
     setCountry(e.nativeEvent.text);
   };
@@ -64,14 +67,14 @@ const HomeScreen = ({ navigation }) => {
     setFood(e.nativeEvent.text);
   };
 
-  const onSubmitCountry = async (term: string) => {
+  const onSubmitCountry = (term: string) => {
     setQuery((prevQuery) => ({
       ...prevQuery,
       country: term,
     }));
   };
 
-  const onSubmitFood = async (term: string) => {
+  const onSubmitFood = (term: string) => {
     setQuery((prevQuery) => ({
       ...prevQuery,
       food: term,
@@ -81,7 +84,7 @@ const HomeScreen = ({ navigation }) => {
   const budgetFriendlyResults = resultsQuery.data?.businesses?.filter(
     (result) => {
       return result.price === "$";
-    }
+    },
   );
 
   const midRangeResults = resultsQuery.data?.businesses?.filter((result) => {
@@ -146,7 +149,7 @@ const HomeScreen = ({ navigation }) => {
               </Box>
               <Box mx="lg" mb="lg">
                 <CountrySearchBar
-                  value={country ?? query.country}
+                  value={country ?? query.country ?? ""}
                   onChange={onChangeCountry}
                   onSubmit={onSubmitCountry}
                 />
@@ -157,9 +160,9 @@ const HomeScreen = ({ navigation }) => {
                   onSubmit={onSubmitFood}
                 />
 
-                {locationError && (
+                {locationError != null && (
                   <MagnusText color="red500" fontSize="md" mt="sm">
-                    {locationError.message}
+                    {locationError}
                   </MagnusText>
                 )}
 
