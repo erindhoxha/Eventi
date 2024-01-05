@@ -1,40 +1,41 @@
-import React from 'react';
+import React from "react";
 import {
- NavigationContainer,
- NavigationProp,
- RouteProp,
- useNavigation,
-} from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import HomeScreen from './src/screens/HomeScreen';
-import ResultScreen from './src/screens/ResultScreen';
-import BookmarksScreen from './src/screens/BookmarksScreen';
-import { Icon, Image, Text } from 'react-native-magnus';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { Pressable } from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationStackProp } from 'react-navigation-stack';
-import LoginScreen from './src/screens/LoginScreen';
+  NavigationContainer,
+  NavigationProp,
+  RouteProp,
+  useNavigation,
+} from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import HomeScreen from "./src/screens/HomeScreen";
+import ResultScreen from "./src/screens/ResultScreen";
+import BookmarksScreen from "./src/screens/BookmarksScreen";
+import { Icon, Image, Text } from "react-native-magnus";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { Pressable } from "react-native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { NavigationStackProp } from "react-navigation-stack";
+import LoginScreen from "./src/screens/LoginScreen";
+import { AuthProvider, useAuth } from "./src/context/AuthContext";
 
 export type RootStackParamList = {
- Home: undefined;
- Login: undefined;
- Bookmarks: undefined;
- Restaurant: {
-  restaurantName: string;
-  id: string;
- };
+  Home: undefined;
+  Login: undefined;
+  Bookmarks: undefined;
+  Restaurant: {
+    restaurantName: string;
+    id: string;
+  };
 };
 
 export type RootStackProps = {
- [Route in keyof RootStackParamList]: NavigationStackProp<
-  'params',
-  RootStackParamList[Route]
- >;
+  [Route in keyof RootStackParamList]: NavigationStackProp<
+    "params",
+    RootStackParamList[Route]
+  >;
 };
 
 export type RoutePropWithParams<Route extends keyof RootStackParamList> =
- RouteProp<RootStackParamList, Route>;
+  RouteProp<RootStackParamList, Route>;
 
 type RootStackNavigationProp = NavigationProp<RootStackParamList>;
 
@@ -44,139 +45,151 @@ const Tab = createBottomTabNavigator();
 const queryClient = new QueryClient();
 
 function LogoTitle() {
- return (
-  <Image
-   style={{ width: 200, height: 35 }}
-   resizeMode="contain"
-   source={require('./assets/eventi.png')}
-  />
- );
+  return (
+    <Image
+      style={{ width: 200, height: 35 }}
+      resizeMode="contain"
+      source={require("./assets/eventi.png")}
+    />
+  );
 }
 
 function HomeStack() {
- const navigation = useNavigation<RootStackNavigationProp>();
+  const navigation = useNavigation<RootStackNavigationProp>();
 
- return (
-  <Stack.Navigator>
-   <Stack.Screen
-    name="Home"
-    component={HomeScreen}
-    options={{
-     headerTitle: () => <LogoTitle />,
-     headerRight: (props) => (
-      <Pressable
-       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-       onPress={() => navigation.navigate('Login')}
-      >
-       <Text fontWeight="500" color="white" fontSize={16} mx="lg">
-        Login
-       </Text>
-      </Pressable>
-     ),
-     headerStyle: {
-      backgroundColor: '#000',
-      shadowColor: 'transparent', // this covers iOS
-      elevation: 0, // this covers Android
-     },
-     headerTintColor: '#fff',
-    }}
-   />
-   <Stack.Screen
-    name="Restaurant"
-    component={ResultScreen}
-    options={(props) => ({
-     title: props.route.params?.restaurantName || 'Restaurant Details',
-     headerStyle: {
-      backgroundColor: '#000',
-      shadowColor: 'transparent', // this covers iOS
-      elevation: 0, // this covers Android
-     },
-     headerTintColor: '#fff',
-    })}
-   />
-   <Stack.Screen
-    name="Login"
-    component={LoginScreen}
-    options={(props) => ({
-     title: 'Login',
-     headerStyle: {
-      backgroundColor: '#000',
-      shadowColor: 'transparent', // this covers iOS
-      elevation: 0, // this covers Android
-     },
-     headerTintColor: '#fff',
-    })}
-   />
-  </Stack.Navigator>
- );
+  const { user, logout } = useAuth();
+
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          headerTitle: () => <LogoTitle />,
+          headerRight: () => (
+            <Pressable
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              onPress={() => {
+                if (user) {
+                  logout(); // if the user is logged in, log out
+                } else {
+                  navigation.navigate("Login"); // if the user is not logged in, navigate to the login screen
+                }
+              }}
+            >
+              <Text fontWeight="500" color="white" fontSize={16} mx="lg">
+                {user ? "Logout" : "Login"}
+              </Text>
+            </Pressable>
+          ),
+          headerStyle: {
+            backgroundColor: "#000",
+            shadowColor: "transparent", // this covers iOS
+            elevation: 0, // this covers Android
+          },
+          headerTintColor: "#fff",
+        }}
+      />
+      <Stack.Screen
+        name="Restaurant"
+        component={ResultScreen}
+        options={(props) => ({
+          title: props.route.params?.restaurantName || "Restaurant Details",
+          headerStyle: {
+            backgroundColor: "#000",
+            shadowColor: "transparent", // this covers iOS
+            elevation: 0, // this covers Android
+          },
+          headerTintColor: "#fff",
+        })}
+      />
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={(props) => ({
+          title: "Login",
+          headerStyle: {
+            backgroundColor: "#000",
+            shadowColor: "transparent", // this covers iOS
+            elevation: 0, // this covers Android
+          },
+          headerTintColor: "#fff",
+        })}
+      />
+    </Stack.Navigator>
+  );
 }
 
 function BookmarksStack() {
- return (
-  <Stack.Navigator>
-   <Stack.Screen
-    name="Bookmarks"
-    component={BookmarksScreen}
-    options={{
-     headerStyle: {
-      backgroundColor: '#000',
-      shadowColor: 'transparent', // this covers iOS
-      elevation: 0, // this covers Android
-     },
-     headerTintColor: '#fff',
-    }}
-   />
-  </Stack.Navigator>
- );
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Bookmarks"
+        component={BookmarksScreen}
+        options={{
+          headerStyle: {
+            backgroundColor: "#000",
+            shadowColor: "transparent", // this covers iOS
+            elevation: 0, // this covers Android
+          },
+          headerTintColor: "#fff",
+        }}
+      />
+    </Stack.Navigator>
+  );
 }
 
 export default function App() {
- return (
-  <QueryClientProvider client={queryClient}>
-   <NavigationContainer>
-    <Tab.Navigator
-     initialRouteName="Home"
-     screenOptions={({ route }) => ({
-      headerShown: false,
-      tabBarIcon: ({ focused, color, size }) => {
-       let icon = 'home';
+  const result = useAuth();
 
-       if (route.name === 'TabBookmarks') {
-        icon = 'book';
-       }
+  return (
+    <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <NavigationContainer>
+          <Tab.Navigator
+            initialRouteName="Home"
+            screenOptions={({ route }) => ({
+              headerShown: false,
+              tabBarIcon: ({ focused, color, size }) => {
+                let icon = "home";
 
-       return (
-        <Icon
-         name={icon}
-         fontSize={size}
-         color={color}
-         fontFamily="FontAwesome"
-        />
-       );
-      },
-      tabBarActiveTintColor: '#fff',
-      tabBarInactiveTintColor: '#bababa',
-      tabBarStyle: {
-       backgroundColor: '#000',
-      },
-     })}
-    >
-     <Tab.Screen
-      name="TabHome"
-      options={{
-       title: 'Home',
-      }}
-      component={HomeStack}
-     />
-     <Tab.Screen
-      name="TabBookmarks"
-      options={{
-       title: 'Bookmarks',
-      }}
-      component={BookmarksStack}
-     />
-    </Tab.Navigator>
-   </NavigationContainer>
-  </QueryClientProvider>
- );
+                if (route.name === "TabBookmarks") {
+                  icon = "book";
+                }
+
+                return (
+                  <Icon
+                    name={icon}
+                    fontSize={size}
+                    color={color}
+                    fontFamily="FontAwesome"
+                  />
+                );
+              },
+              tabBarActiveTintColor: "#fff",
+              tabBarInactiveTintColor: "#bababa",
+              tabBarStyle: {
+                backgroundColor: "#000",
+              },
+            })}
+          >
+            <Tab.Screen
+              name="TabHome"
+              options={{
+                title: "Home",
+              }}
+              component={HomeStack}
+            />
+            <Tab.Screen
+              name="TabBookmarks"
+              options={{
+                title: "Bookmarks",
+              }}
+              component={BookmarksStack}
+            />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </QueryClientProvider>
+    </AuthProvider>
+  );
 }
