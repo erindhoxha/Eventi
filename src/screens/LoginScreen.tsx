@@ -1,4 +1,4 @@
-import React, { ElementRef, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Alert,
   Platform,
@@ -11,21 +11,26 @@ import {
   Box,
   Button,
   Host,
-  Icon,
   Input,
   Text as MagnusText,
   ThemeProvider,
 } from "react-native-magnus";
-import type { RoutePropWithParams } from "../../App";
+import type { RootStackProps } from "../../App";
 import { supabase } from "../../lib/supabase";
 import { TextInput } from "react-native-gesture-handler";
+import Spinner from "../components/Spinner/Spinner";
 
-const LoginScreen = ({ route }: { route: RoutePropWithParams<"Login"> }) => {
-  const [submitted, setSubmitted] = useState(false);
-
+const LoginScreen = ({
+  navigation,
+}: {
+  navigation: RootStackProps["Login"];
+}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const [signingIn, setSigningIn] = useState(false);
+  const [signingUp, setSigningUp] = useState(false);
 
   const emailRef = useRef<TextInput | null>(null);
   const passwordRef = useRef<TextInput | null>(null);
@@ -38,6 +43,9 @@ const LoginScreen = ({ route }: { route: RoutePropWithParams<"Login"> }) => {
     });
 
     if (error) Alert.alert(error.message);
+    if (!error) {
+      navigation.navigate("Home");
+    }
     setLoading(false);
   }
 
@@ -146,7 +154,10 @@ const LoginScreen = ({ route }: { route: RoutePropWithParams<"Login"> }) => {
                     focusBorderColor="blue700"
                     onChangeText={(text) => setPassword(text)}
                     onSubmitEditing={() => {
-                      setSubmitted(true);
+                      setSigningIn(true);
+                      signInWithEmail().finally(() => {
+                        setSigningIn(false);
+                      });
                     }}
                   />
                   <Button
@@ -156,12 +167,19 @@ const LoginScreen = ({ route }: { route: RoutePropWithParams<"Login"> }) => {
                     color="white"
                     disabled={loading}
                     onPress={() => {
+                      setSigningIn(true);
                       signInWithEmail().finally(() => {
-                        setSubmitted(true);
+                        setSigningIn(false);
                       });
                     }}
                   >
-                    Sign in
+                    {signingIn ? (
+                      <MagnusText color="white" fontSize={16}>
+                        <Spinner color="white" size={16} /> Signing in...
+                      </MagnusText>
+                    ) : (
+                      "Sign in"
+                    )}
                   </Button>
                   <Button
                     block
@@ -172,19 +190,20 @@ const LoginScreen = ({ route }: { route: RoutePropWithParams<"Login"> }) => {
                     disabled={loading}
                     borderWidth={1.5}
                     onPress={() => {
+                      setSigningUp(true);
                       signUpWithEmail().finally(() => {
-                        setSubmitted(true);
+                        setSigningUp(false);
                       });
                     }}
                   >
-                    Sign up
+                    {signingUp ? (
+                      <MagnusText color="green700" fontSize={16}>
+                        <Spinner color="green700" size={16} /> Signing up...
+                      </MagnusText>
+                    ) : (
+                      "Sign up"
+                    )}
                   </Button>
-                  {submitted && (
-                    <MagnusText color="gray900" fontSize="sm" mt="lg" mb="md">
-                      We have sent you a magic link to your email address. Click
-                      on the link to login.
-                    </MagnusText>
-                  )}
                 </Box>
               </View>
             </View>

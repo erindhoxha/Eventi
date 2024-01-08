@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   NavigationContainer,
   NavigationProp,
@@ -15,12 +15,16 @@ import { Pressable } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationStackProp } from "react-navigation-stack";
 import LoginScreen from "./src/screens/LoginScreen";
-import { AuthProvider, useAuth } from "./src/context/AuthContext";
+import Account from "./src/screens/AccountScreen";
+import { Session } from "@supabase/supabase-js";
+import { supabase } from "./lib/supabase";
+import { AuthProvider, useAuthContext } from "./src/context/AuthContext";
 
 export type RootStackParamList = {
   Home: undefined;
   Login: undefined;
   Bookmarks: undefined;
+  Account: undefined;
   Restaurant: {
     restaurantName: string;
     id: string;
@@ -54,10 +58,19 @@ function LogoTitle() {
   );
 }
 
+const headerOptions = {
+  headerStyle: {
+    backgroundColor: "#000",
+    shadowColor: "transparent", // this covers iOS
+    elevation: 0, // this covers Android
+  },
+  headerTintColor: "#fff",
+};
+
 function HomeStack() {
   const navigation = useNavigation<RootStackNavigationProp>();
 
-  const { user, logout } = useAuth();
+  const { session } = useAuthContext();
 
   return (
     <Stack.Navigator>
@@ -66,28 +79,25 @@ function HomeStack() {
         component={HomeScreen}
         options={{
           headerTitle: () => <LogoTitle />,
-          headerRight: () => (
-            <Pressable
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-              onPress={() => {
-                if (user) {
-                  logout(); // if the user is logged in, log out
-                } else {
+          headerRight: () =>
+            !session ? (
+              <Pressable
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                onPress={() => {
+                  // if (session) {
+                  //   supabase.auth.signOut().then(() => {
+                  //     navigation.navigate("Login");
+                  //   });
+                  // } else {
                   navigation.navigate("Login"); // if the user is not logged in, navigate to the login screen
-                }
-              }}
-            >
-              <Text fontWeight="500" color="white" fontSize={16} mx="lg">
-                {user ? "Logout" : "Login"}
-              </Text>
-            </Pressable>
-          ),
-          headerStyle: {
-            backgroundColor: "#000",
-            shadowColor: "transparent", // this covers iOS
-            elevation: 0, // this covers Android
-          },
-          headerTintColor: "#fff",
+                }}
+              >
+                <Text fontWeight="500" color="white" fontSize={16} mx="lg">
+                  Login
+                </Text>
+              </Pressable>
+            ) : null,
+          ...headerOptions,
         }}
       />
       <Stack.Screen
@@ -95,26 +105,21 @@ function HomeStack() {
         component={ResultScreen}
         options={(props) => ({
           title: props.route.params?.restaurantName || "Restaurant Details",
-          headerStyle: {
-            backgroundColor: "#000",
-            shadowColor: "transparent", // this covers iOS
-            elevation: 0, // this covers Android
-          },
-          headerTintColor: "#fff",
+          ...headerOptions,
         })}
       />
       <Stack.Screen
         name="Login"
         component={LoginScreen}
-        options={(props) => ({
+        options={() => ({
           title: "Login",
-          headerStyle: {
-            backgroundColor: "#000",
-            shadowColor: "transparent", // this covers iOS
-            elevation: 0, // this covers Android
-          },
-          headerTintColor: "#fff",
+          ...headerOptions,
         })}
+      />
+      <Stack.Screen
+        name="Bookmarks"
+        component={BookmarksScreen}
+        options={headerOptions}
       />
     </Stack.Navigator>
   );
@@ -126,21 +131,37 @@ function BookmarksStack() {
       <Stack.Screen
         name="Bookmarks"
         component={BookmarksScreen}
-        options={{
-          headerStyle: {
-            backgroundColor: "#000",
-            shadowColor: "transparent", // this covers iOS
-            elevation: 0, // this covers Android
-          },
-          headerTintColor: "#fff",
-        }}
+        options={headerOptions}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function AccountStack({ route }: { route: RoutePropWithParams<"Account"> }) {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Account"
+        component={Account}
+        initialParams={route.params}
+        options={headerOptions}
       />
     </Stack.Navigator>
   );
 }
 
 export default function App() {
-  const result = useAuth();
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+  }, []);
 
   return (
     <AuthProvider>
@@ -155,6 +176,10 @@ export default function App() {
 
                 if (route.name === "TabBookmarks") {
                   icon = "book";
+                }
+
+                if (route.name === "TabAccount") {
+                  icon = "user";
                 }
 
                 return (
@@ -179,6 +204,7 @@ export default function App() {
                 title: "Home",
               }}
               component={HomeStack}
+              initialParams={{ session }}
             />
             <Tab.Screen
               name="TabBookmarks"
@@ -187,6 +213,16 @@ export default function App() {
               }}
               component={BookmarksStack}
             />
+            {session && session.user ? (
+              <Tab.Screen
+                name="TabAccount"
+                options={{
+                  title: "Account",
+                }}
+                initialParams={{ session }}
+                component={AccountStack}
+              />
+            ) : null}
           </Tab.Navigator>
         </NavigationContainer>
       </QueryClientProvider>

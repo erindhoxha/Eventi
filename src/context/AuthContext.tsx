@@ -1,57 +1,29 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
+import { Session } from "@supabase/supabase-js";
+import { supabase } from "../../lib/supabase";
 
-const AuthContext = createContext({
-  user: {
-    id: 0,
-    name: "John Doe",
-    email: "johndoe@gmail.com",
-  },
-  login: (email: string, password: string) => {},
-  logout: () => {},
-});
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
+interface AuthContextProps {
+  session: Session | null;
 }
 
-interface AuthProviderProps {
-  children: React.ReactNode;
-}
+const AuthContext = createContext<AuthContextProps>({ session: null });
 
-const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<User | null>({
-    id: 0,
-    name: "John Doe",
-    email: "",
-  });
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [session, setSession] = useState<Session | null>(null);
 
-  const login = async (email: string, password: string) => {
-    const result = { id: 1, name: "John Doe", email };
-    setUser(result);
-  };
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
 
-  const logout = () => {
-    // Call API to logout
-    setUser(null);
-  };
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={{ session }}>{children}</AuthContext.Provider>
   );
 };
 
-const useAuth = () => {
-  const context = React.useContext(AuthContext);
-
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-
-  return context;
-};
-
-export { AuthContext, AuthProvider, useAuth };
+export const useAuthContext = () => useContext(AuthContext);

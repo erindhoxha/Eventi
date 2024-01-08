@@ -22,7 +22,7 @@ import type { RootStackProps, RoutePropWithParams } from "../../App";
 import useResult from "../hooks/useResult";
 import Spinner from "../components/Spinner/Spinner";
 import useReview from "../hooks/useReview";
-import { useAuth } from "../context/AuthContext";
+import { useAuthContext } from "../context/AuthContext";
 
 const ResultScreen = ({
   navigation,
@@ -33,9 +33,9 @@ const ResultScreen = ({
 }) => {
   const { id } = route.params;
 
-  const { user } = useAuth();
-
   const width = Dimensions.get("window").width;
+
+  const { session } = useAuthContext();
 
   const resultData = useResult(id);
   const data = useReview(id);
@@ -169,7 +169,7 @@ const ResultScreen = ({
                     bg="green700"
                     color="white"
                     onPress={() => {
-                      if (user) {
+                      if (session) {
                         // add to bookmarks
                       } else {
                         navigation.navigate("Login");
