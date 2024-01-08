@@ -209,7 +209,8 @@ export default function App() {
             initialRouteName="Home"
             screenOptions={({ route }) => ({
               headerShown: false,
-              tabBarIcon: ({ focused, color, size }) => {
+              tabBarIcon: ({ color, size }) => {
+                // Note to self: I can use `focused` here if I need to
                 let icon = "home";
 
                 if (route.name === "TabBookmarks") {

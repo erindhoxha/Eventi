@@ -1,5 +1,11 @@
 import React from "react";
-import { SafeAreaView, ScrollView, StatusBar, View } from "react-native";
+import {
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  View,
+} from "react-native";
 import {
   Box,
   Host,
@@ -15,13 +21,30 @@ const BookmarksScreen = () => {
         <Host>
           <ScrollView
             contentContainerStyle={{
-              flex: 1,
+              flexGrow: 1,
             }}
             style={{
-              backgroundColor: "black",
+              backgroundColor: "white",
             }}
           >
-            <View style={{ backgroundColor: "white", flexGrow: 1 }}>
+            {Platform.OS === "ios" && (
+              <View
+                style={{
+                  backgroundColor: "black",
+                  height: 300,
+                  position: "absolute",
+                  top: -300,
+                  left: 0,
+                  right: 0,
+                }}
+              />
+            )}
+            <View
+              style={{
+                backgroundColor: "white",
+                flexGrow: 1,
+              }}
+            >
               <Box flex={1} pt="lg">
                 <Box mx="lg">
                   <MagnusText

@@ -118,18 +118,19 @@ const ResultScreen = ({
                   </Box>
                   <Tag
                     mt={4}
-                    borderColor={
-                      resultData.data != null && resultData.data?.is_closed
-                        ? "red700"
-                        : "blue600"
-                    }
-                    color={
-                      resultData.data != null && resultData.data?.is_closed
-                        ? "red700"
-                        : "blue600"
-                    }
+                    color="white"
                     borderWidth={1.5}
-                    bg="transparent"
+                    bg={
+                      resultData.data != null && resultData.data?.is_closed
+                        ? "red700"
+                        : "orange500"
+                    }
+                    rounded="circle"
+                    row
+                    flexWrap="wrap"
+                    px="md"
+                    m="lg"
+                    alignSelf="flex-start"
                   >
                     {resultData.data != null && resultData.data?.is_closed
                       ? "Closed"
