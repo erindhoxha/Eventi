@@ -93,7 +93,7 @@ function HomeStack() {
                 }}
               >
                 <Text fontWeight="500" color="white" fontSize={16} mx="lg">
-                  Login
+                  Sign in
                 </Text>
               </Pressable>
             ) : null,
@@ -112,7 +112,7 @@ function HomeStack() {
         name="Login"
         component={LoginScreen}
         options={() => ({
-          title: "Login",
+          title: "Sign in or register",
           ...headerOptions,
         })}
       />
@@ -125,26 +125,64 @@ function HomeStack() {
   );
 }
 
-function BookmarksStack() {
+function BookmarksStack({
+  navigation,
+}: {
+  navigation: NavigationProp<RootStackParamList>;
+}) {
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="Bookmarks"
         component={BookmarksScreen}
-        options={headerOptions}
+        options={{
+          headerLeft: () => (
+            <Pressable
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              onPress={() => {
+                navigation.navigate("Home"); // if the user is not logged in, navigate to the login screen
+              }}
+            >
+              <Text fontWeight="500" color="white" fontSize={16} mx="lg">
+                Go Back
+              </Text>
+            </Pressable>
+          ),
+          ...headerOptions,
+        }}
       />
     </Stack.Navigator>
   );
 }
 
-function AccountStack({ route }: { route: RoutePropWithParams<"Account"> }) {
+function AccountStack({
+  route,
+  navigation,
+}: {
+  route: RoutePropWithParams<"Account">;
+  navigation: NavigationProp<RootStackParamList>;
+}) {
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="Account"
         component={Account}
         initialParams={route.params}
-        options={headerOptions}
+        options={{
+          headerLeft: () => (
+            <Pressable
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              onPress={() => {
+                navigation.navigate("Home"); // if the user is not logged in, navigate to the login screen
+              }}
+            >
+              <Text fontWeight="500" color="white" fontSize={16} mx="lg">
+                Go Back
+              </Text>
+            </Pressable>
+          ),
+          ...headerOptions,
+        }}
       />
     </Stack.Navigator>
   );

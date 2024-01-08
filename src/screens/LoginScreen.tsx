@@ -105,10 +105,11 @@ const LoginScreen = ({
                     mt="md"
                     mb="md"
                   >
-                    Login or register
+                    Sign in or register
                   </MagnusText>
                   <MagnusText color="gray900" fontSize="sm" mb="md">
-                    After you enter your email we will send you a magic link
+                    After you sign up we will send you an email to confirm your
+                    email address.
                   </MagnusText>
 
                   <MagnusText
@@ -198,10 +199,10 @@ const LoginScreen = ({
                   >
                     {signingUp ? (
                       <MagnusText color="green700" fontSize={16}>
-                        <Spinner color="green700" size={16} /> Signing up...
+                        <Spinner color="green700" size={16} /> Registering...
                       </MagnusText>
                     ) : (
-                      "Sign up"
+                      "Register"
                     )}
                   </Button>
                 </Box>

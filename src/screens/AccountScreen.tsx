@@ -122,6 +122,15 @@ const AccountScreen = ({ route, navigation }) => {
               <Box pt="lg" mx="lg">
                 <Text
                   color="gray900"
+                  fontWeight="bold"
+                  fontSize="4xl"
+                  mt="md"
+                  mb="md"
+                >
+                  Account details
+                </Text>
+                <Text
+                  color="gray900"
                   fontSize="md"
                   fontWeight="600"
                   mt="lg"
@@ -133,9 +142,9 @@ const AccountScreen = ({ route, navigation }) => {
                   value={route.params.session?.user?.email}
                   hitSlop={{ top: 24, bottom: 24, left: 24, right: 24 }}
                   keyboardType="default"
-                  inputMode="text"
+                  inputMode="email"
                   placeholder="Email"
-                  autoComplete="password"
+                  autoComplete="email"
                   fontSize={16}
                   autoCapitalize="none"
                   p={10}
@@ -149,14 +158,15 @@ const AccountScreen = ({ route, navigation }) => {
                   mt="lg"
                   mb="md"
                 >
-                  Name
+                  Username
                 </Text>
                 <Input
                   value={username || ""}
                   hitSlop={{ top: 24, bottom: 24, left: 24, right: 24 }}
                   keyboardType="default"
                   inputMode="text"
-                  placeholder="Name"
+                  placeholder="Username"
+                  autoComplete="username"
                   fontSize={16}
                   autoCapitalize="none"
                   p={10}
@@ -219,7 +229,7 @@ const AccountScreen = ({ route, navigation }) => {
                     onPress={() => {
                       setSigningOut(true);
                       supabase.auth.signOut().finally(() => {
-                        navigation.push("Home");
+                        navigation.navigate("Home");
                         setSigningOut(false);
                       });
                     }}
