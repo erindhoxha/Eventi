@@ -135,21 +135,7 @@ function BookmarksStack({
       <Stack.Screen
         name="Bookmarks"
         component={BookmarksScreen}
-        options={{
-          headerLeft: () => (
-            <Pressable
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-              onPress={() => {
-                navigation.navigate("Home"); // if the user is not logged in, navigate to the login screen
-              }}
-            >
-              <Text fontWeight="500" color="white" fontSize={16} mx="lg">
-                Go Back
-              </Text>
-            </Pressable>
-          ),
-          ...headerOptions,
-        }}
+        options={headerOptions}
       />
     </Stack.Navigator>
   );
@@ -168,21 +154,7 @@ function AccountStack({
         name="Account"
         component={Account}
         initialParams={route.params}
-        options={{
-          headerLeft: () => (
-            <Pressable
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-              onPress={() => {
-                navigation.navigate("Home"); // if the user is not logged in, navigate to the login screen
-              }}
-            >
-              <Text fontWeight="500" color="white" fontSize={16} mx="lg">
-                Go Back
-              </Text>
-            </Pressable>
-          ),
-          ...headerOptions,
-        }}
+        options={headerOptions}
       />
     </Stack.Navigator>
   );
