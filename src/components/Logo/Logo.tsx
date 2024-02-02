@@ -6,7 +6,7 @@ const Logo = () => {
     <Image
       style={{ width: 200, height: 35 }}
       resizeMode="contain"
-      source={require("../assets/eventi.png")}
+      source={require("../../../assets/eventi.png")}
     />
   );
 };

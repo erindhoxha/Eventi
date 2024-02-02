@@ -23,6 +23,7 @@ import useResult from "../hooks/useResult";
 import Spinner from "../components/Spinner/Spinner";
 import useReview from "../hooks/useReview";
 import { useAuthContext } from "../context/AuthContext";
+import Review from "../components/Review/Review";
 
 const ResultScreen = ({
   navigation,
@@ -172,6 +173,7 @@ const ResultScreen = ({
                     onPress={() => {
                       if (session) {
                         // add to bookmarks
+                        console.log("Add to bookmark!");
                       } else {
                         navigation.navigate("Login");
                       }
@@ -197,39 +199,7 @@ const ResultScreen = ({
                     </MagnusText>
                   )}
                   {data?.data?.reviews.map((review) => (
-                    <Box
-                      key={review.id}
-                      mt="lg"
-                      p="lg"
-                      bg="gray100"
-                      rounded="md"
-                    >
-                      <Box
-                        mb="lg"
-                        row
-                        justifyContent="space-between"
-                        alignItems="center"
-                      >
-                        <MagnusText fontSize="md" fontWeight="bold">
-                          {review.user.name}
-                        </MagnusText>
-                        <Box row>
-                          {Array.from({ length: review.rating }).map(
-                            (_, index) => (
-                              <Icon
-                                key={index}
-                                name="star"
-                                color="yellow500"
-                                fontSize="sm"
-                              />
-                            ),
-                          )}
-                        </Box>
-                      </Box>
-                      <MagnusText fontSize="md" color="gray600">
-                        {review.text}
-                      </MagnusText>
-                    </Box>
+                    <Review key={review.id} review={review} />
                   ))}
                 </Box>
               </Box>

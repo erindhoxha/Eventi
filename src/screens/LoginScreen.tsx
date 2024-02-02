@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
   Platform,
@@ -19,6 +19,7 @@ import type { RootStackProps } from "../../App";
 import { supabase } from "../../lib/supabase";
 import { TextInput } from "react-native-gesture-handler";
 import Spinner from "../components/Spinner/Spinner";
+import { AuthError } from "@supabase/supabase-js";
 
 const LoginScreen = ({
   navigation,
@@ -28,6 +29,7 @@ const LoginScreen = ({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<AuthError>();
 
   const [signingIn, setSigningIn] = useState(false);
   const [signingUp, setSigningUp] = useState(false);
@@ -36,13 +38,17 @@ const LoginScreen = ({
   const passwordRef = useRef<TextInput | null>(null);
 
   async function signInWithEmail() {
+    setError(undefined);
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
     });
 
-    if (error) Alert.alert(error.message);
+    if (error) {
+      setError(error);
+    }
+
     if (!error) {
       navigation.navigate("Home");
     }
@@ -50,6 +56,7 @@ const LoginScreen = ({
   }
 
   async function signUpWithEmail() {
+    setError(undefined);
     setLoading(true);
     const {
       data: { session },
@@ -59,7 +66,7 @@ const LoginScreen = ({
       password: password,
     });
 
-    if (error) Alert.alert(error.message);
+    if (error) setError(error);
     if (!session)
       Alert.alert("Please check your inbox for email verification!");
     setLoading(false);
@@ -131,8 +138,9 @@ const LoginScreen = ({
                     placeholder="Email address"
                     autoComplete="email"
                     autoFocus
+                    borderColor={error ? "red500" : "gray300"}
                     autoCapitalize="none"
-                    focusBorderColor="blue700"
+                    focusBorderColor={error ? "red500" : "blue700"}
                     hitSlop={{ top: 24, bottom: 24, left: 24, right: 24 }}
                     onChangeText={(text) => setEmail(text)}
                     onSubmitEditing={() => {
@@ -147,12 +155,13 @@ const LoginScreen = ({
                     inputMode="text"
                     placeholder="Password"
                     autoComplete="password"
+                    borderColor={error ? "red500" : "gray300"}
                     secureTextEntry
                     fontSize={16}
                     autoCapitalize="none"
                     mt="lg"
                     p={10}
-                    focusBorderColor="blue700"
+                    focusBorderColor={error ? "red500" : "blue700"}
                     onChangeText={(text) => setPassword(text)}
                     onSubmitEditing={() => {
                       setSigningIn(true);
@@ -205,6 +214,11 @@ const LoginScreen = ({
                       "Register"
                     )}
                   </Button>
+                  {error && (
+                    <MagnusText color="red500" fontSize="sm" mt="lg">
+                      {error.message}
+                    </MagnusText>
+                  )}
                 </Box>
               </View>
             </View>
