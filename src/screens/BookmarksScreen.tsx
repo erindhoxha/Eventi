@@ -12,8 +12,15 @@ import {
   Text as MagnusText,
   ThemeProvider,
 } from "react-native-magnus";
+import useUserBookmarks from "../hooks/useUserBookmarks";
+import { useAuthContext } from "../context/AuthContext";
 
 const BookmarksScreen = () => {
+  const { session } = useAuthContext();
+
+  const { bookmarks } = useUserBookmarks(session?.user?.id);
+
+  console.log(bookmarks);
   return (
     <ThemeProvider>
       <StatusBar barStyle="light-content" />
