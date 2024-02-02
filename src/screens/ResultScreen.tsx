@@ -176,6 +176,10 @@ const ResultScreen = ({
                         useBookmarkMutation({
                           restaurant_id: id,
                           user_id: session.user.id,
+                          title: resultData.data?.name,
+                          image_url: resultData.data?.image_url,
+                          reviews: resultData.data?.review_count,
+                          rating: resultData.data?.rating,
                         });
                         console.log(id, session.user.id);
                         console.log("Add to bookmark!");

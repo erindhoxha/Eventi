@@ -21,6 +21,7 @@ const BookmarksScreen = () => {
   const { bookmarks } = useUserBookmarks(session?.user?.id);
 
   console.log(bookmarks);
+
   return (
     <ThemeProvider>
       <StatusBar barStyle="light-content" />
@@ -63,9 +64,35 @@ const BookmarksScreen = () => {
                   >
                     Bookmarks
                   </MagnusText>
-                  <MagnusText color="gray900" fontSize="xl" mt="md" mb="md">
-                    You have no bookmarks yet.
-                  </MagnusText>
+                  {bookmarks?.map((bookmark) => (
+                    <Box
+                      key={bookmark.id}
+                      bg="white"
+                      p="lg"
+                      mt="md"
+                      mb="md"
+                      rounded="md"
+                      shadow="sm"
+                    >
+                      <MagnusText
+                        color="gray900"
+                        fontWeight="bold"
+                        fontSize="xl"
+                        mb="md"
+                      >
+                        {bookmark.title}
+                      </MagnusText>
+                      <MagnusText color="gray900" fontSize="md">
+                        {bookmark.rating}
+                      </MagnusText>
+                    </Box>
+                  ))}
+
+                  {!bookmarks?.length && (
+                    <MagnusText color="gray900" fontSize="xl" mt="md" mb="md">
+                      You have no bookmarks yet.
+                    </MagnusText>
+                  )}
                 </Box>
               </Box>
             </View>

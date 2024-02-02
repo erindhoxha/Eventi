@@ -1,33 +1,25 @@
-import { useState, useEffect } from "react";
+import { useQuery } from "react-query";
 import { supabase } from "../../lib/supabase";
 
+const fetchBookmarks = async (user_id: string) => {
+  const { data, error } = await supabase
+    .from("bookmarks")
+    .select("*")
+    .eq("user_id", user_id);
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+};
+
 const useUserBookmarks = (user_id) => {
-  const [bookmarks, setBookmarks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchBookmarks = async () => {
-      try {
-        const { data, error } = await supabase
-          .from("bookmarks")
-          .select("*")
-          .eq("user_id", user_id);
-
-        if (error) {
-          throw error;
-        }
-
-        setBookmarks(data);
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBookmarks();
-  }, [user_id]);
+  const {
+    data: bookmarks,
+    isLoading: loading,
+    error,
+  } = useQuery(["userBookmarks", user_id], () => fetchBookmarks(user_id));
 
   return { bookmarks, loading, error };
 };

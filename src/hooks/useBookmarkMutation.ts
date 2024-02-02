@@ -3,9 +3,29 @@ import { supabase } from "../../lib/supabase";
 const useBookmarkMutation = async ({
   user_id,
   restaurant_id,
+  title,
+  image_url,
+  reviews,
+  rating,
+  // price,
+  // phone,
+  // address,
+  // website,
+  // hours,
+  // categories,
 }: {
   user_id: string;
   restaurant_id: string;
+  title?: string;
+  image_url?: string;
+  reviews?: number;
+  rating?: number;
+  // price: number;
+  // phone: string;
+  // address: string;
+  // website: string;
+  // hours: string;
+  // categories: string;
 }) => {
   // Check if the bookmark already exists
   const { data: existingBookmark, error: fetchError } = await supabase
@@ -24,9 +44,20 @@ const useBookmarkMutation = async ({
     return;
   }
 
-  const { error: insertError } = await supabase
-    .from("bookmarks")
-    .insert({ user_id, restaurant_id });
+  const { error: insertError } = await supabase.from("bookmarks").insert({
+    user_id,
+    restaurant_id,
+    title,
+    image_url,
+    reviews,
+    rating,
+    // price,
+    // phone,
+    // address,
+    // website,
+    // hours,
+    // categories,
+  });
 
   if (insertError) {
     console.log(insertError);
