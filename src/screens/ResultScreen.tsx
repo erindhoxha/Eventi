@@ -24,6 +24,7 @@ import Spinner from "../components/Spinner/Spinner";
 import useReview from "../hooks/useReview";
 import { useAuthContext } from "../context/AuthContext";
 import Review from "../components/Review/Review";
+import useBookmarkMutation from "../hooks/useBookmarkMutation";
 
 const ResultScreen = ({
   navigation,
@@ -172,7 +173,11 @@ const ResultScreen = ({
                     color="white"
                     onPress={() => {
                       if (session) {
-                        // add to bookmarks
+                        useBookmarkMutation({
+                          restaurant_id: id,
+                          user_id: session.user.id,
+                        });
+                        console.log(id, session.user.id);
                         console.log("Add to bookmark!");
                       } else {
                         navigation.navigate("Login");
