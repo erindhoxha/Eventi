@@ -212,7 +212,11 @@ const ResultScreen = ({
                   <Button
                     block
                     mt="lg"
-                    bg="green700"
+                    bg={
+                      bookmarkExists
+                        ? 'green700'
+                        : 'orange500'
+                    }
                     color="white"
                     onPress={async () => {
                       if (session && bookmarkExists) {
