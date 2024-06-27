@@ -1,68 +1,59 @@
-import { supabase } from "../../lib/supabase";
+import { useMutation, useQueryClient } from 'react-query';
+import { supabase } from '../../lib/supabase';
 
-const useBookmarkMutation = async ({
-  user_id,
-  restaurant_id,
-  title,
-  image_url,
-  reviews,
-  rating,
-  // price,
-  // phone,
-  // address,
-  // website,
-  // hours,
-  // categories,
-}: {
+// Define the type for your mutation function's argument
+type BookmarkMutationArgs = {
   user_id: string;
   restaurant_id: string;
   title?: string;
   image_url?: string;
   reviews?: number;
   rating?: number;
-  // price: number;
-  // phone: string;
-  // address: string;
-  // website: string;
-  // hours: string;
-  // categories: string;
-}) => {
-  // Check if the bookmark already exists
-  const { data: existingBookmark, error: fetchError } = await supabase
-    .from("bookmarks")
-    .select("*")
-    .eq("user_id", user_id)
-    .eq("restaurant_id", restaurant_id);
+  // Add other fields as needed
+};
 
-  if (fetchError) {
-    console.log(fetchError);
-    throw new Error("Error fetching bookmark");
-  }
+// Define the mutation function
+async function bookmarkMutation({ user_id, restaurant_id, title, image_url, reviews, rating }: BookmarkMutationArgs) {
+  // Your existing logic to check and insert a bookmark
+  const { data: existingBookmark, error: fetchError } = await supabase
+    .from('bookmarks')
+    .select('*')
+    .eq('user_id', user_id)
+    .eq('restaurant_id', restaurant_id);
+
+  if (fetchError) throw new Error('Error fetching bookmark');
 
   if (existingBookmark && existingBookmark.length > 0) {
-    console.log("Bookmark already exists");
-    return;
+    throw new Error('Bookmark already exists');
   }
 
-  const { error: insertError } = await supabase.from("bookmarks").insert({
+  const { error: insertError } = await supabase.from('bookmarks').insert({
     user_id,
     restaurant_id,
     title,
     image_url,
     reviews,
     rating,
-    // price,
-    // phone,
-    // address,
-    // website,
-    // hours,
-    // categories,
+    // Include other fields as needed
   });
 
-  if (insertError) {
-    console.log(insertError);
-    throw new Error("Error inserting bookmark");
-  }
-};
+  if (insertError) throw new Error('Error inserting bookmark');
 
-export default useBookmarkMutation;
+  return; // Return what you need here, for example, the inserted bookmark
+}
+
+export function useBookmarkMutation() {
+  const queryClient = useQueryClient();
+  const { mutate, status, isError, error } = useMutation(bookmarkMutation, {
+    onSuccess() {
+      queryClient.invalidateQueries('userBookmarks');
+    },
+  });
+
+  return {
+    mutate,
+    status,
+    isError, // Indicates if the mutation encountered an error
+    error, // The error object if an error occurred
+  };
+}

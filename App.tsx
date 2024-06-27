@@ -15,6 +15,7 @@ import HomeStack from "./src/navigation/HomeStack";
 import BookmarksStack from "./src/navigation/BookmarksStack";
 import AccountStack from "./src/navigation/AccountStack";
 import { getIconByRoute } from "./src/utils/getIconByRoute";
+import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown'
 
 export type RootStackParamList = {
   Home: undefined;
@@ -57,6 +58,7 @@ export default function App() {
   }, []);
 
   return (
+    <AutocompleteDropdownContextProvider>
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
         <NavigationContainer>
@@ -111,5 +113,6 @@ export default function App() {
         </NavigationContainer>
       </QueryClientProvider>
     </AuthProvider>
+</AutocompleteDropdownContextProvider>
   );
 }
