@@ -113,7 +113,6 @@ const ResultScreen = ({
                     </Carousel.Item>
                   ))}
                 </Carousel>
-                {/* Position absolute item that shows the image sequence e.g. 1/3 */}
                 <Box position="absolute" top={24} right={24} p="md" bg="black" rounded="circle">
                   <MagnusText color="white">
                     {resultData?.data?.photos.length}{' '}
