@@ -1,33 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  Alert,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  View,
-} from "react-native";
-import {
-  Box,
-  Button,
-  Host,
-  Input,
-  Text as MagnusText,
-  ThemeProvider,
-} from "react-native-magnus";
-import type { RootStackProps } from "../../App";
-import { supabase } from "../../lib/supabase";
-import { TextInput } from "react-native-gesture-handler";
-import Spinner from "../components/Spinner/Spinner";
-import { AuthError } from "@supabase/supabase-js";
+import React, { useEffect, useRef, useState } from 'react';
+import { Alert, Platform, SafeAreaView, ScrollView, StatusBar, View } from 'react-native';
+import { Box, Button, Host, Input, Text as MagnusText, ThemeProvider } from 'react-native-magnus';
+import type { RootStackProps } from '../../App';
+import { supabase } from '../../lib/supabase';
+import { TextInput } from 'react-native-gesture-handler';
+import Spinner from '../components/Spinner/Spinner';
+import { AuthError } from '@supabase/supabase-js';
 
-const LoginScreen = ({
-  navigation,
-}: {
-  navigation: RootStackProps["Login"];
-}) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const LoginScreen = ({ navigation }: { navigation: RootStackProps['Login'] }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<AuthError>();
 
@@ -50,7 +32,7 @@ const LoginScreen = ({
     }
 
     if (!error) {
-      navigation.navigate("Home");
+      navigation.navigate('Home');
     }
     setLoading(false);
   }
@@ -67,8 +49,7 @@ const LoginScreen = ({
     });
 
     if (error) setError(error);
-    if (!session)
-      Alert.alert("Please check your inbox for email verification!");
+    if (!session) Alert.alert('Please check your inbox for email verification!');
     setLoading(false);
   }
 
@@ -82,15 +63,14 @@ const LoginScreen = ({
               flexGrow: 1,
             }}
             style={{
-              backgroundColor: "white",
-            }}
-          >
-            {Platform.OS === "ios" && (
+              backgroundColor: 'white',
+            }}>
+            {Platform.OS === 'ios' && (
               <View
                 style={{
-                  backgroundColor: "black",
+                  backgroundColor: 'black',
                   height: 300,
-                  position: "absolute",
+                  position: 'absolute',
                   top: -300,
                   left: 0,
                   right: 0,
@@ -99,33 +79,19 @@ const LoginScreen = ({
             )}
             <View
               style={{
-                backgroundColor: "white",
+                backgroundColor: 'white',
                 flexGrow: 1,
-              }}
-            >
+              }}>
               <View>
                 <Box pt="lg" mx="lg">
-                  <MagnusText
-                    color="gray900"
-                    fontWeight="bold"
-                    fontSize="4xl"
-                    mt="md"
-                    mb="md"
-                  >
+                  <MagnusText color="gray900" fontWeight="bold" fontSize="4xl" mt="md" mb="md">
                     Sign in or register
                   </MagnusText>
                   <MagnusText color="gray900" fontSize="sm" mb="md">
-                    After you sign up we will send you an email to confirm your
-                    email address.
+                    After you sign up we will send you an email to confirm your email address.
                   </MagnusText>
 
-                  <MagnusText
-                    color="gray900"
-                    fontSize="md"
-                    fontWeight="600"
-                    mt="lg"
-                    mb="md"
-                  >
+                  <MagnusText color="gray900" fontSize="md" fontWeight="600" mt="lg" mb="md">
                     Email address
                   </MagnusText>
                   <Input
@@ -138,9 +104,9 @@ const LoginScreen = ({
                     placeholder="Email address"
                     autoComplete="email"
                     autoFocus
-                    borderColor={error ? "red500" : "gray300"}
+                    borderColor={error ? 'red500' : 'gray300'}
                     autoCapitalize="none"
-                    focusBorderColor={error ? "red500" : "blue700"}
+                    focusBorderColor={error ? 'red500' : 'blue700'}
                     hitSlop={{ top: 24, bottom: 24, left: 24, right: 24 }}
                     onChangeText={(text) => setEmail(text)}
                     onSubmitEditing={() => {
@@ -155,13 +121,13 @@ const LoginScreen = ({
                     inputMode="text"
                     placeholder="Password"
                     autoComplete="password"
-                    borderColor={error ? "red500" : "gray300"}
+                    borderColor={error ? 'red500' : 'gray300'}
                     secureTextEntry
                     fontSize={16}
                     autoCapitalize="none"
                     mt="lg"
                     p={10}
-                    focusBorderColor={error ? "red500" : "blue700"}
+                    focusBorderColor={error ? 'red500' : 'blue700'}
                     onChangeText={(text) => setPassword(text)}
                     onSubmitEditing={() => {
                       setSigningIn(true);
@@ -181,14 +147,13 @@ const LoginScreen = ({
                       signInWithEmail().finally(() => {
                         setSigningIn(false);
                       });
-                    }}
-                  >
+                    }}>
                     {signingIn ? (
                       <MagnusText color="white" fontSize={16}>
                         <Spinner color="white" size={16} /> Signing in...
                       </MagnusText>
                     ) : (
-                      "Sign in"
+                      'Sign in'
                     )}
                   </Button>
                   <Button
@@ -204,14 +169,13 @@ const LoginScreen = ({
                       signUpWithEmail().finally(() => {
                         setSigningUp(false);
                       });
-                    }}
-                  >
+                    }}>
                     {signingUp ? (
                       <MagnusText color="green700" fontSize={16}>
                         <Spinner color="green700" size={16} /> Registering...
                       </MagnusText>
                     ) : (
-                      "Register"
+                      'Register'
                     )}
                   </Button>
                   {error && (

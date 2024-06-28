@@ -1,23 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { View, Alert, Platform, ScrollView } from "react-native";
-import { supabase } from "../../lib/supabase";
-import {
-  Box,
-  Button,
-  Host,
-  Input,
-  StatusBar,
-  Text,
-  ThemeProvider,
-} from "react-native-magnus";
-import Spinner from "../components/Spinner/Spinner";
+import React, { useState, useEffect } from 'react';
+import { View, Alert, Platform, ScrollView } from 'react-native';
+import { supabase } from '../../lib/supabase';
+import { Box, Button, Host, Input, StatusBar, Text, ThemeProvider } from 'react-native-magnus';
+import Spinner from '../components/Spinner/Spinner';
 
 const AccountScreen = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
   const [signingOut, setSigningOut] = useState(false);
-  const [username, setUsername] = useState("");
-  const [website, setWebsite] = useState("");
-  const [avatarUrl, setAvatarUrl] = useState("");
+  const [username, setUsername] = useState('');
+  const [website, setWebsite] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState('');
+  const [email, setEmail] = useState('');
 
   useEffect(() => {
     if (route.params.session) getProfile();
@@ -26,13 +19,12 @@ const AccountScreen = ({ route, navigation }) => {
   async function getProfile() {
     try {
       setLoading(true);
-      if (!route.params.session?.user)
-        throw new Error("No user on the session!");
+      if (!route.params.session?.user) throw new Error('No user on the session!');
 
       const { data, error, status } = await supabase
-        .from("profiles")
+        .from('profiles')
         .select(`username, website, avatar_url`)
-        .eq("id", route.params.session?.user.id)
+        .eq('id', route.params.session?.user.id)
         .single();
       if (error && status !== 406) {
         throw error;
@@ -63,8 +55,7 @@ const AccountScreen = ({ route, navigation }) => {
   }) {
     try {
       setLoading(true);
-      if (!route.params.session?.user)
-        throw new Error("No user on the session!");
+      if (!route.params.session?.user) throw new Error('No user on the session!');
 
       const updates = {
         id: route.params.session?.user.id,
@@ -74,7 +65,7 @@ const AccountScreen = ({ route, navigation }) => {
         updated_at: new Date(),
       };
 
-      const { error } = await supabase.from("profiles").upsert(updates);
+      const { error } = await supabase.from('profiles').upsert(updates);
 
       if (error) {
         throw error;
@@ -97,15 +88,14 @@ const AccountScreen = ({ route, navigation }) => {
             flexGrow: 1,
           }}
           style={{
-            backgroundColor: "white",
-          }}
-        >
-          {Platform.OS === "ios" && (
+            backgroundColor: 'white',
+          }}>
+          {Platform.OS === 'ios' && (
             <View
               style={{
-                backgroundColor: "black",
+                backgroundColor: 'black',
                 height: 300,
-                position: "absolute",
+                position: 'absolute',
                 top: -300,
                 left: 0,
                 right: 0,
@@ -114,32 +104,20 @@ const AccountScreen = ({ route, navigation }) => {
           )}
           <View
             style={{
-              backgroundColor: "white",
+              backgroundColor: 'white',
               flexGrow: 1,
-            }}
-          >
+            }}>
             <View>
               <Box pt="lg" mx="lg">
-                <Text
-                  color="gray900"
-                  fontWeight="bold"
-                  fontSize="4xl"
-                  mt="md"
-                  mb="md"
-                >
+                <Text color="gray900" fontWeight="bold" fontSize="4xl" mt="md" mb="md">
                   Account details
                 </Text>
-                <Text
-                  color="gray900"
-                  fontSize="md"
-                  fontWeight="600"
-                  mt="lg"
-                  mb="md"
-                >
+                <Text color="gray900" fontSize="md" fontWeight="600" mt="lg" mb="md">
                   Email address
                 </Text>
                 <Input
-                  value={route.params.session?.user?.email}
+                  autoFocus
+                  value={email || route.params.session?.user?.email}
                   hitSlop={{ top: 24, bottom: 24, left: 24, right: 24 }}
                   keyboardType="default"
                   inputMode="email"
@@ -149,19 +127,15 @@ const AccountScreen = ({ route, navigation }) => {
                   autoCapitalize="none"
                   p={10}
                   focusBorderColor="blue700"
-                  autoFocus
+                  onChangeText={(v) => {
+                    setEmail(v);
+                  }}
                 />
-                <Text
-                  color="gray900"
-                  fontSize="md"
-                  fontWeight="600"
-                  mt="lg"
-                  mb="md"
-                >
+                <Text color="gray900" fontSize="md" fontWeight="600" mt="lg" mb="md">
                   Username
                 </Text>
                 <Input
-                  value={username || ""}
+                  value={username || ''}
                   hitSlop={{ top: 24, bottom: 24, left: 24, right: 24 }}
                   keyboardType="default"
                   inputMode="text"
@@ -173,13 +147,7 @@ const AccountScreen = ({ route, navigation }) => {
                   focusBorderColor="blue700"
                   onChangeText={(text) => setUsername(text)}
                 />
-                <Text
-                  color="gray900"
-                  fontSize="md"
-                  fontWeight="600"
-                  mt="lg"
-                  mb="md"
-                >
+                <Text color="gray900" fontSize="md" fontWeight="600" mt="lg" mb="md">
                   Website
                 </Text>
                 <Input
@@ -192,7 +160,7 @@ const AccountScreen = ({ route, navigation }) => {
                   autoCapitalize="none"
                   p={10}
                   focusBorderColor="blue700"
-                  value={website || ""}
+                  value={website || ''}
                   onChangeText={(text) => setWebsite(text)}
                 />
 
@@ -208,14 +176,13 @@ const AccountScreen = ({ route, navigation }) => {
                         website,
                         avatar_url: avatarUrl,
                       })
-                    }
-                  >
+                    }>
                     {loading ? (
                       <Text color="white" fontSize={16}>
                         <Spinner color="white" size={16} /> Updating...
                       </Text>
                     ) : (
-                      "Update"
+                      'Update'
                     )}
                   </Button>
 
@@ -229,17 +196,16 @@ const AccountScreen = ({ route, navigation }) => {
                     onPress={() => {
                       setSigningOut(true);
                       supabase.auth.signOut().finally(() => {
-                        navigation.navigate("Home");
+                        navigation.navigate('Home');
                         setSigningOut(false);
                       });
-                    }}
-                  >
+                    }}>
                     {signingOut ? (
                       <Text color="green700" fontSize={16}>
                         <Spinner color="green700" size={16} /> Signing out...
                       </Text>
                     ) : (
-                      "Sign out"
+                      'Sign out'
                     )}
                   </Button>
                 </Box>
