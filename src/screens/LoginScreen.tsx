@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Alert, Platform, SafeAreaView, ScrollView, StatusBar, View } from 'react-native';
 import { Box, Button, Host, Input, Text as MagnusText, ThemeProvider } from 'react-native-magnus';
 import type { RootStackProps } from '../../App';

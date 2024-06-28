@@ -1,37 +1,14 @@
-import React from 'react';
-import {
-  Dimensions,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  View,
-} from 'react-native';
-import {
-  Box,
-  Button,
-  Carousel,
-  Host,
-  Icon,
-  Image,
-  Text as MagnusText,
-  Tag,
-  ThemeProvider,
-} from 'react-native-magnus';
-import type {
-  RootStackProps,
-  RoutePropWithParams,
-} from '../../App';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, Platform, SafeAreaView, ScrollView, StatusBar, View } from 'react-native';
+import { Box, Button, Carousel, Host, Icon, Image, Text as MagnusText, Tag, ThemeProvider } from 'react-native-magnus';
+import type { RootStackProps, RoutePropWithParams } from '../../App';
 import useResult from '../hooks/useResult';
 import Spinner from '../components/Spinner/Spinner';
 import useReview from '../hooks/useReview';
 import { useAuthContext } from '../context/AuthContext';
 import Review from '../components/Review/Review';
-import {
-  useBookmarkMutation,
-  useRemoveBookmarkMutation,
-} from '../hooks/useBookmarkMutation';
-import useUserBookmarks from '../hooks/useUserBookmarks';
+import { useBookmarkMutation, useRemoveBookmarkMutation } from '../hooks/useBookmarkMutation';
+import useBookmark from '../hooks/useBookmark';
 
 const ResultScreen = ({
   navigation,
@@ -48,15 +25,29 @@ const ResultScreen = ({
 
   const resultData = useResult(id);
   const data = useReview(id);
-  const { mutate, error, status } = useBookmarkMutation();
-  const { mutate: removeBookmark, status: bookmarkStatus } =
-    useRemoveBookmarkMutation();
 
-  const {
-    data: bookmarks,
-    status: bookmarksStatus,
-    isFetching,
-  } = useUserBookmarks(session?.user?.id);
+  const { data: bookmark, status: bookmarkStatus } = useBookmark(session?.user?.id || '', id);
+
+  const [toggled, setToggled] = useState(!!bookmark);
+
+  useEffect(() => {
+    if (!!bookmark) {
+      setToggled(true);
+    } else {
+      setToggled(false);
+    }
+  }, [bookmark]);
+
+  const { mutate, error, status } = useBookmarkMutation({
+    onSuccess: () => {
+      setToggled(true);
+    },
+  });
+  const { mutate: removeBookmark, status: bookmarkMutationStatus } = useRemoveBookmarkMutation({
+    onSuccess: () => {
+      setToggled(false);
+    },
+  });
 
   if (resultData.status === 'loading') {
     return (
@@ -65,10 +56,6 @@ const ResultScreen = ({
       </Box>
     );
   }
-
-  const bookmarkExists = bookmarks?.find(
-    (b) => b.restaurant_id === id,
-  );
 
   const handleAddBookmark = () => {
     if (session) {
@@ -82,6 +69,8 @@ const ResultScreen = ({
       });
     }
   };
+
+  const isLoading = bookmarkStatus === 'loading' || status === 'loading' || bookmarkMutationStatus === 'loading';
 
   return (
     <ThemeProvider>
@@ -120,35 +109,27 @@ const ResultScreen = ({
                 <Carousel showIndicators={false}>
                   {resultData?.data?.photos.map((photo) => (
                     <Carousel.Item key={photo}>
-                      <Image
-                        source={{ uri: photo }}
-                        h={250}
-                        w={width}
-                        resizeMode="cover"
-                      />
+                      <Image source={{ uri: photo }} h={250} w={width} resizeMode="cover" />
                     </Carousel.Item>
                   ))}
                 </Carousel>
+                {/* Position absolute item that shows the image sequence e.g. 1/3 */}
+                <Box position="absolute" top={24} right={24} p="md" bg="black" rounded="circle">
+                  <MagnusText color="white">
+                    {resultData?.data?.photos.length}{' '}
+                    {resultData?.data?.photos && resultData?.data?.photos.length < 2 ? 'image' : 'images'}
+                  </MagnusText>
+                </Box>
               </View>
               <Box pt="lg" px="lg">
-                <Box
-                  row
-                  justifyContent="space-between"
-                  alignItems="flex-start">
+                <Box row justifyContent="space-between" alignItems="flex-start">
                   <Box flex={1}>
                     {resultData.status === 'error' && (
-                      <MagnusText
-                        color="red500"
-                        fontSize="md">
+                      <MagnusText color="red500" fontSize="md">
                         {resultData.error.message}
                       </MagnusText>
                     )}
-                    <MagnusText
-                      color="gray900"
-                      fontWeight="bold"
-                      fontSize="4xl"
-                      mt="md"
-                      mb="md">
+                    <MagnusText color="gray900" fontWeight="bold" fontSize="4xl" mt="md" mb="md">
                       {resultData.data?.name}
                     </MagnusText>
                   </Box>
@@ -156,22 +137,14 @@ const ResultScreen = ({
                     mt={4}
                     color="white"
                     borderWidth={1.5}
-                    bg={
-                      resultData.data != null &&
-                      resultData.data?.is_closed
-                        ? 'red700'
-                        : 'orange500'
-                    }
+                    bg={resultData.data != null && resultData.data?.is_closed ? 'red700' : 'orange500'}
                     rounded="circle"
                     row
                     flexWrap="wrap"
                     px="md"
                     m="lg"
                     alignSelf="flex-start">
-                    {resultData.data != null &&
-                    resultData.data?.is_closed
-                      ? 'Closed'
-                      : 'Open now'}
+                    {resultData.data != null && resultData.data?.is_closed ? 'Closed' : 'Open now'}
                   </Tag>
                 </Box>
                 <Box
@@ -182,29 +155,17 @@ const ResultScreen = ({
                     <MagnusText fontWeight="bold" mr="sm">
                       {resultData.data?.rating} stars
                     </MagnusText>
-                    <MagnusText color="gray500">
-                      ({resultData.data?.review_count}{' '}
-                      reviews)
-                    </MagnusText>
+                    <MagnusText color="gray500">({resultData.data?.review_count} reviews)</MagnusText>
                   </Box>
                   <MagnusText color="gray600" fontSize="md">
-                    {resultData.data?.location.display_address.join(
-                      ' ',
-                    )}
+                    {resultData.data?.location.display_address.join(' ')}
                   </MagnusText>
                   <MagnusText color="gray600" fontSize="md">
-                    Type of venue:{' '}
-                    {resultData.data?.categories
-                      .map((c) => c.title)
-                      .join(', ')}
+                    Type of venue: {resultData.data?.categories.map((c) => c.title).join(', ')}
                   </MagnusText>
-                  {resultData.data?.display_phone !=
-                  null ? (
-                    <MagnusText
-                      color="gray600"
-                      fontSize="md">
-                      Phone:{' '}
-                      {resultData.data?.display_phone}
+                  {resultData.data?.display_phone != null ? (
+                    <MagnusText color="gray600" fontSize="md">
+                      Phone: {resultData.data?.display_phone}
                     </MagnusText>
                   ) : null}
                 </Box>
@@ -212,41 +173,28 @@ const ResultScreen = ({
                   <Button
                     block
                     mt="lg"
-                    bg={
-                      bookmarkExists
-                        ? 'green700'
-                        : 'orange500'
-                    }
+                    bg={toggled ? 'green700' : 'orange500'}
                     color="white"
+                    disabled={isLoading}
                     onPress={async () => {
-                      if (session && bookmarkExists) {
+                      if (session && bookmark) {
                         removeBookmark({
                           user_id: session.user.id,
                           restaurant_id: id,
                         });
-                      } else if (
-                        session &&
-                        !bookmarkExists
-                      ) {
+                      } else if (session && !bookmark) {
                         handleAddBookmark();
                       } else {
                         navigation.navigate('Login');
                       }
                     }}>
-                    {status === 'loading' ||
-                    bookmarkStatus === 'loading' ||
-                    isFetching ||
-                    bookmarksStatus === 'loading' ? (
+                    {isLoading ? (
                       <Box mr="md">
                         <Spinner color="white" size={16} />
                       </Box>
                     ) : (
                       <Icon
-                        name={
-                          bookmarkExists
-                            ? 'check'
-                            : 'bookmark'
-                        }
+                        name={toggled ? 'check' : 'bookmark'}
                         color="white"
                         mr="md"
                         fontSize={15}
@@ -255,21 +203,11 @@ const ResultScreen = ({
                     )}
 
                     <MagnusText fontSize={15} color="white">
-                      {status === 'loading' ||
-                      bookmarkStatus === 'loading' ||
-                      bookmarksStatus === 'loading' ||
-                      isFetching
-                        ? 'Updating...'
-                        : (bookmarkExists
-                            ? 'Bookmarked'
-                            : 'Bookmark') || 'Bookmark'}
+                      {isLoading ? 'Updating...' : (toggled ? 'Bookmarked' : 'Bookmark') || 'Bookmark'}
                     </MagnusText>
                   </Button>
                   {status === 'error' && (
-                    <MagnusText
-                      mt={12}
-                      color="red500"
-                      fontSize="md">
+                    <MagnusText mt={12} color="red500" fontSize="md">
                       {(error as Error).message}
                     </MagnusText>
                   )}
@@ -277,18 +215,11 @@ const ResultScreen = ({
                 <Box mt="lg" pb="lg">
                   {data.status === 'loading' && <Spinner />}
                   {data.status === 'error' && (
-                    <MagnusText
-                      color="red500"
-                      fontSize="md">
+                    <MagnusText color="red500" fontSize="md">
                       {data.error.message}
                     </MagnusText>
                   )}
-                  {data?.data?.reviews.map((review) => (
-                    <Review
-                      key={review.id}
-                      review={review}
-                    />
-                  ))}
+                  {data?.data?.reviews.map((review) => <Review key={review.id} review={review} />)}
                 </Box>
               </Box>
             </View>
